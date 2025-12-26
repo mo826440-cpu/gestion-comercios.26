@@ -1,0 +1,50 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+
+# Variables de entorno (si las agregás en el futuro)
+.env
+.env.local
+.env.*.local
+
+# Archivos de backup
+*.bak
+*.backup
+*~
+
+# Node modules (si agregás npm en el futuro)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs (si agregás un proceso de build)
+dist/
+build/
+*.min.js
+*.min.css
+
+# Netlify
+.netlify/
+

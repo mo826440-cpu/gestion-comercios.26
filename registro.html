@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Registrá tu comercio en GestiónKiosco - Sistema de gestión para kioscos y pequeños comercios">
+    <title>Registro - GestiónKiosco</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/registro.css">
+    
+    <!-- Favicon placeholder -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE REGISTRO
+         Formulario para crear nueva cuenta de comercio
+    ============================================ -->
+    
+    <div class="registro-container">
+        <!-- Panel izquierdo: Información -->
+        <aside class="registro-info">
+            <div class="registro-info-contenido">
+                <a href="index.html" class="logo">
+                    <span class="logo-icono">🏪</span>
+                    <span class="logo-texto">GestiónKiosco</span>
+                </a>
+                
+                <h1 class="info-titulo">
+                    Empezá a gestionar tu comercio
+                </h1>
+                
+                <ul class="info-beneficios">
+                    <li class="beneficio-item">
+                        <span class="beneficio-check">✓</span>
+                        <span>Registro rápido y gratuito</span>
+                    </li>
+                    <li class="beneficio-item">
+                        <span class="beneficio-check">✓</span>
+                        <span>Empezá a usar en minutos</span>
+                    </li>
+                    <li class="beneficio-item">
+                        <span class="beneficio-check">✓</span>
+                        <span>Funciona sin internet</span>
+                    </li>
+                    <li class="beneficio-item">
+                        <span class="beneficio-check">✓</span>
+                        <span>Soporte incluido</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Panel derecho: Formulario -->
+        <main class="registro-formulario">
+            <div class="formulario-contenedor">
+                <header class="formulario-header">
+                    <h2 class="formulario-titulo">Crear cuenta</h2>
+                    <p class="formulario-subtitulo">
+                        Completá los datos para registrar tu comercio
+                    </p>
+                </header>
+                
+                <!-- Mensaje de estado (éxito/error) -->
+                <div id="mensajeRegistro" class="mensaje mensaje-oculto" role="alert">
+                    <!-- El mensaje se muestra dinámicamente -->
+                </div>
+                
+                <!-- Formulario de registro -->
+                <form id="formRegistro" class="form" novalidate>
+                    <!-- Nombre del comercio -->
+                    <div class="form-grupo">
+                        <label for="nombreComercio" class="form-label form-label-requerido">
+                            Nombre del comercio
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nombreComercio" 
+                            name="nombreComercio" 
+                            class="form-input"
+                            placeholder="Ej: Kiosco Don Pedro"
+                            required
+                            autocomplete="organization"
+                        >
+                        <span class="form-error" id="errorNombreComercio"></span>
+                    </div>
+                    
+                    <!-- Nombre del responsable -->
+                    <div class="form-grupo">
+                        <label for="nombreResponsable" class="form-label form-label-requerido">
+                            Nombre del responsable
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nombreResponsable" 
+                            name="nombreResponsable" 
+                            class="form-input"
+                            placeholder="Tu nombre completo"
+                            required
+                            autocomplete="name"
+                        >
+                        <span class="form-error" id="errorNombreResponsable"></span>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="form-grupo">
+                        <label for="email" class="form-label form-label-requerido">
+                            Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input"
+                            placeholder="tu@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                        <span class="form-error" id="errorEmail"></span>
+                    </div>
+                    
+                    <!-- Contraseña -->
+                    <div class="form-grupo">
+                        <label for="password" class="form-label form-label-requerido">
+                            Contraseña
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            placeholder="Mínimo 6 caracteres"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+                        <span class="form-ayuda">Mínimo 6 caracteres</span>
+                        <span class="form-error" id="errorPassword"></span>
+                    </div>
+                    
+                    <!-- Confirmar contraseña -->
+                    <div class="form-grupo">
+                        <label for="confirmarPassword" class="form-label form-label-requerido">
+                            Confirmar contraseña
+                        </label>
+                        <input 
+                            type="password" 
+                            id="confirmarPassword" 
+                            name="confirmarPassword" 
+                            class="form-input"
+                            placeholder="Repetí tu contraseña"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <span class="form-error" id="errorConfirmarPassword"></span>
+                    </div>
+                    
+                    <!-- Botón submit -->
+                    <div class="form-grupo">
+                        <button type="submit" class="btn btn-primario btn-bloque btn-grande" id="btnRegistrar">
+                            Crear mi cuenta
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Enlaces adicionales -->
+                <footer class="formulario-footer">
+                    <p class="texto-centro">
+                        ¿Ya tenés cuenta? 
+                        <a href="login.html" class="enlace-destacado">Iniciá sesión</a>
+                    </p>
+                    <p class="texto-centro texto-pequeno mt-2">
+                        <a href="index.html">← Volver al inicio</a>
+                    </p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/registro.js"></script>
+</body>
+</html>
+

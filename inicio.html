@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Panel principal de GestiónKiosco - Gestión de tu comercio">
+    <title>Inicio - GestiónKiosco</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    
+    <!-- Favicon placeholder -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA INICIAL (HOME / DASHBOARD)
+         Panel principal con accesos a las diferentes
+         secciones del sistema
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo -->
+            <div class="logo">
+                <span class="logo-icono">🏪</span>
+                <span class="logo-texto">GestiónKiosco</span>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Bienvenida -->
+            <section class="bienvenida">
+                <div class="bienvenida-contenido">
+                    <h1 class="bienvenida-titulo">
+                        ¡Hola! <span id="nombreComercio">Mi Kiosco</span>
+                    </h1>
+                    <p class="bienvenida-mensaje">
+                        Bienvenido a tu panel de gestión. Seleccioná una opción para comenzar.
+                    </p>
+                </div>
+                <div class="bienvenida-fecha">
+                    <span class="fecha-dia" id="fechaActual"></span>
+                    <span class="fecha-hora" id="horaActual"></span>
+                </div>
+            </section>
+            
+            <!-- Grid de accesos rápidos -->
+            <section class="accesos-rapidos">
+                <h2 class="seccion-titulo">Accesos Rápidos</h2>
+                
+                <div class="accesos-grid">
+                    <!-- Ventas -->
+                    <article class="acceso-card" data-modulo="ventas">
+                        <div class="acceso-icono acceso-icono-ventas">
+                            💰
+                        </div>
+                        <div class="acceso-info">
+                            <h3 class="acceso-titulo">Ventas</h3>
+                            <p class="acceso-descripcion">
+                                Registrar ventas y cobrar a clientes
+                            </p>
+                        </div>
+                        <span class="acceso-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Productos -->
+                    <article class="acceso-card" data-modulo="productos">
+                        <div class="acceso-icono acceso-icono-productos">
+                            📦
+                        </div>
+                        <div class="acceso-info">
+                            <h3 class="acceso-titulo">Productos</h3>
+                            <p class="acceso-descripcion">
+                                Gestionar catálogo de productos
+                            </p>
+                        </div>
+                        <span class="acceso-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Stock -->
+                    <article class="acceso-card" data-modulo="stock">
+                        <div class="acceso-icono acceso-icono-stock">
+                            📊
+                        </div>
+                        <div class="acceso-info">
+                            <h3 class="acceso-titulo">Stock</h3>
+                            <p class="acceso-descripcion">
+                                Controlar inventario y existencias
+                            </p>
+                        </div>
+                        <span class="acceso-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Configuración - Solo visible para roles con permiso CONFIG_VER -->
+                    <article class="acceso-card" data-modulo="configuracion" id="accesoConfiguracion" style="display: none;">
+                        <div class="acceso-icono acceso-icono-config">
+                            ⚙️
+                        </div>
+                        <div class="acceso-info">
+                            <h3 class="acceso-titulo">Configuración</h3>
+                            <p class="acceso-descripcion">
+                                Ajustes del sistema y comercio
+                            </p>
+                        </div>
+                        <span class="acceso-estado acceso-estado-activo">Disponible</span>
+                    </article>
+                    
+                    <!-- Mantenimiento - Solo visible para rol programador -->
+                    <article class="acceso-card acceso-card-programador" data-modulo="mantenimiento" id="accesoMantenimiento" style="display: none;">
+                        <div class="acceso-icono acceso-icono-mant">
+                            🔧
+                        </div>
+                        <div class="acceso-info">
+                            <h3 class="acceso-titulo">Mantenimiento</h3>
+                            <p class="acceso-descripcion">
+                                Panel técnico del sistema
+                            </p>
+                        </div>
+                        <span class="acceso-estado acceso-estado-dev">Solo Dev</span>
+                    </article>
+                </div>
+            </section>
+            
+            <!-- Información del sistema -->
+            <section class="info-sistema">
+                <div class="info-card">
+                    <div class="info-icono">📴</div>
+                    <div class="info-contenido">
+                        <h4 class="info-titulo">Modo Offline</h4>
+                        <p class="info-texto">
+                            Este sistema funciona sin internet. Tus datos se sincronizarán cuando vuelva la conexión.
+                        </p>
+                    </div>
+                    <div class="info-estado" id="estadoConexion">
+                        <span class="estado-indicador online"></span>
+                        <span class="estado-texto">Conectado</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                GestiónKiosco v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/inicio.js"></script>
+</body>
+</html>
+

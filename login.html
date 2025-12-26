@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Iniciar sesión en GestiónKiosco - Sistema de gestión para kioscos y pequeños comercios">
+    <title>Iniciar Sesión - GestiónKiosco</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+    
+    <!-- Favicon placeholder -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE LOGIN
+         Formulario para iniciar sesión en el sistema
+    ============================================ -->
+    
+    <div class="login-container">
+        <!-- Decoración de fondo -->
+        <div class="login-fondo">
+            <div class="fondo-circulo fondo-circulo-1"></div>
+            <div class="fondo-circulo fondo-circulo-2"></div>
+        </div>
+        
+        <!-- Card de login -->
+        <main class="login-card">
+            <!-- Logo y título -->
+            <header class="login-header">
+                <a href="index.html" class="logo">
+                    <span class="logo-icono">🏪</span>
+                    <span class="logo-texto">GestiónKiosco</span>
+                </a>
+                <h1 class="login-titulo">Bienvenido de nuevo</h1>
+                <p class="login-subtitulo">
+                    Ingresá tus datos para acceder al sistema
+                </p>
+            </header>
+            
+            <!-- Mensaje de estado (éxito/error) -->
+            <div id="mensajeLogin" class="mensaje mensaje-oculto" role="alert">
+                <!-- El mensaje se muestra dinámicamente -->
+            </div>
+            
+            <!-- Formulario de login -->
+            <form id="formLogin" class="form-login" novalidate>
+                <!-- Email -->
+                <div class="form-grupo">
+                    <label for="email" class="form-label form-label-requerido">
+                        Email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input"
+                        placeholder="tu@email.com"
+                        required
+                        autocomplete="email"
+                        autofocus
+                    >
+                    <span class="form-error" id="errorEmail"></span>
+                </div>
+                
+                <!-- Contraseña -->
+                <div class="form-grupo">
+                    <label for="password" class="form-label form-label-requerido">
+                        Contraseña
+                    </label>
+                    <div class="input-password-container">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            placeholder="Tu contraseña"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="btn-mostrar-password" id="btnMostrarPassword" title="Mostrar contraseña">
+                            👁️
+                        </button>
+                    </div>
+                    <span class="form-error" id="errorPassword"></span>
+                </div>
+                
+                <!-- Recordar sesión (placeholder para futuro) -->
+                <div class="form-grupo form-grupo-check">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="recordar" name="recordar">
+                        <span class="checkbox-texto">Recordar mi sesión</span>
+                    </label>
+                </div>
+                
+                <!-- Botón submit -->
+                <div class="form-grupo">
+                    <button type="submit" class="btn btn-primario btn-bloque btn-grande" id="btnIngresar">
+                        Ingresar
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Enlaces adicionales -->
+            <footer class="login-footer">
+                <p class="texto-centro">
+                    ¿No tenés cuenta? 
+                    <a href="registro.html" class="enlace-destacado">Registrate gratis</a>
+                </p>
+                <p class="texto-centro texto-pequeno mt-2">
+                    <a href="index.html">← Volver al inicio</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>
+

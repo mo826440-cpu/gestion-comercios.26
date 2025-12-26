@@ -1,0 +1,263 @@
+/* ============================================
+   LOGIN - ESTILOS ESPECÍFICOS
+   ============================================
+   Estilos para la pantalla de inicio de sesión
+   en GestiónKiosco.
+============================================ */
+
+/* ============================================
+   LAYOUT PRINCIPAL
+============================================ */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espaciado-xl);
+    background: linear-gradient(135deg, var(--color-fondo) 0%, var(--color-primario-light) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================
+   DECORACIÓN DE FONDO
+============================================ */
+.login-fondo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.fondo-circulo {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.fondo-circulo-1 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, var(--color-primario) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    animation: float-circle 15s ease-in-out infinite;
+}
+
+.fondo-circulo-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, var(--color-secundario) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+    animation: float-circle 12s ease-in-out infinite reverse;
+}
+
+@keyframes float-circle {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(20px, -20px) rotate(10deg); }
+}
+
+/* ============================================
+   CARD DE LOGIN
+============================================ */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--color-fondo-card);
+    border-radius: var(--radio-xl);
+    box-shadow: var(--sombra-fuerte);
+    padding: var(--espaciado-2xl);
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s ease-out;
+}
+
+/* ============================================
+   HEADER DEL LOGIN
+============================================ */
+.login-header {
+    text-align: center;
+    margin-bottom: var(--espaciado-xl);
+}
+
+.login-header .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espaciado-sm);
+    text-decoration: none;
+    margin-bottom: var(--espaciado-lg);
+}
+
+.login-header .logo-icono {
+    font-size: 2rem;
+}
+
+.login-header .logo-texto {
+    font-size: var(--tamano-xl);
+    font-weight: 800;
+    color: var(--color-primario);
+}
+
+.login-titulo {
+    font-size: var(--tamano-2xl);
+    color: var(--color-texto);
+    margin-bottom: var(--espaciado-xs);
+}
+
+.login-subtitulo {
+    color: var(--color-texto-secundario);
+    margin-bottom: 0;
+}
+
+/* ============================================
+   FORMULARIO
+============================================ */
+.form-login {
+    margin-bottom: var(--espaciado-lg);
+}
+
+/* Grupo de checkbox */
+.form-grupo-check {
+    margin-bottom: var(--espaciado-lg);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-sm);
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primario);
+    cursor: pointer;
+}
+
+.checkbox-texto {
+    font-size: var(--tamano-sm);
+    color: var(--color-texto-secundario);
+}
+
+/* ============================================
+   CAMPO DE CONTRASEÑA CON TOGGLE
+============================================ */
+.input-password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-password-container .form-input {
+    padding-right: 50px;
+}
+
+.btn-mostrar-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 8px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    border-radius: var(--radio-md);
+}
+
+.btn-mostrar-password:hover {
+    opacity: 1;
+    background: var(--color-fondo);
+}
+
+.btn-mostrar-password.activo {
+    opacity: 1;
+}
+
+/* Estado de carga del botón */
+.btn-cargando {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-cargando::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   FOOTER DEL LOGIN
+============================================ */
+.login-footer {
+    padding-top: var(--espaciado-lg);
+    border-top: 1px solid var(--color-borde);
+}
+
+.enlace-destacado {
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+.enlace-destacado:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 600px) {
+    .login-container {
+        padding: var(--espaciado-md);
+        align-items: flex-start;
+        padding-top: var(--espaciado-xl);
+    }
+    
+    .login-card {
+        padding: var(--espaciado-lg);
+    }
+    
+    .login-titulo {
+        font-size: var(--tamano-xl);
+    }
+    
+    .fondo-circulo-1 {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .fondo-circulo-2 {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+/* ============================================
+   ANIMACIONES
+============================================ */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.login-card.error-shake {
+    animation: shake 0.5s ease-in-out;
+}
+

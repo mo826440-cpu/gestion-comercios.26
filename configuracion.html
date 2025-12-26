@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Configuración - GestiónKiosco">
+    <title>Configuración - GestiónKiosco</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/configuracion.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE CONFIGURACIÓN
+         Configuraciones del comercio y del sistema
+         
+         PERMISOS:
+         - CONFIG_VER: Puede ver la pantalla
+         - CONFIG_EDITAR: Puede editar todo
+         - CONFIG_COMERCIO: Puede editar datos comercio
+         - CONFIG_VENTAS: Puede editar config ventas
+         - CONFIG_STOCK: Puede editar config stock
+         - CONFIG_IMPRESION: Puede editar impresión
+    ============================================ -->
+    
+    <!-- Header -->
+    <header class="config-header">
+        <div class="contenedor header-contenido">
+            <div class="header-izq">
+                <a href="inicio.html" class="btn-volver">← Volver</a>
+                <div class="header-titulo">
+                    <span class="header-icono">⚙️</span>
+                    <h1>Configuración</h1>
+                </div>
+            </div>
+            <div class="header-der">
+                <span class="usuario-info" id="usuarioInfo">Cargando...</span>
+                <span class="sync-status" id="syncStatus" title="Estado de sincronización">
+                    <span class="sync-icon">🔄</span>
+                </span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="config-main">
+        <div class="contenedor">
+            <div class="config-layout">
+                
+                <!-- Sidebar de navegación -->
+                <aside class="config-sidebar" id="configSidebar">
+                    <nav class="config-nav">
+                        <button class="config-nav-item active" data-seccion="comercio">
+                            <span class="nav-icono">🏪</span>
+                            <span class="nav-texto">Datos del Comercio</span>
+                        </button>
+                        <button class="config-nav-item" data-seccion="ventas">
+                            <span class="nav-icono">💰</span>
+                            <span class="nav-texto">Ventas</span>
+                        </button>
+                        <button class="config-nav-item" data-seccion="stock">
+                            <span class="nav-icono">📦</span>
+                            <span class="nav-texto">Stock</span>
+                        </button>
+                        <button class="config-nav-item" data-seccion="impresion">
+                            <span class="nav-icono">🖨️</span>
+                            <span class="nav-texto">Impresión</span>
+                        </button>
+                        <button class="config-nav-item" data-seccion="aplicacion">
+                            <span class="nav-icono">🎨</span>
+                            <span class="nav-texto">Aplicación</span>
+                        </button>
+                    </nav>
+                </aside>
+                
+                <!-- Área de contenido -->
+                <div class="config-content">
+                    
+                    <!-- ============================================
+                         SECCIÓN 1: DATOS DEL COMERCIO
+                    ============================================ -->
+                    <section class="config-seccion active" id="seccion-comercio">
+                        <div class="seccion-header">
+                            <h2>🏪 Datos del Comercio</h2>
+                            <p class="seccion-descripcion">Información básica de tu negocio</p>
+                        </div>
+                        
+                        <form class="config-form" id="formComercio">
+                            <div class="form-grid">
+                                <!-- Razón Social -->
+                                <div class="form-grupo">
+                                    <label class="form-label form-label-requerido">Razón Social</label>
+                                    <input type="text" class="form-input" id="razon_social" 
+                                           maxlength="100" required>
+                                </div>
+                                
+                                <!-- Nombre Fantasía -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Nombre Fantasía</label>
+                                    <input type="text" class="form-input" id="nombre_fantasia" 
+                                           maxlength="50" placeholder="Nombre comercial">
+                                </div>
+                                
+                                <!-- CUIT -->
+                                <div class="form-grupo">
+                                    <label class="form-label form-label-requerido">CUIT/CUIL</label>
+                                    <input type="text" class="form-input" id="cuit" 
+                                           placeholder="XX-XXXXXXXX-X" maxlength="13" required>
+                                </div>
+                                
+                                <!-- Condición IVA -->
+                                <div class="form-grupo">
+                                    <label class="form-label form-label-requerido">Condición IVA</label>
+                                    <select class="form-input" id="condicion_iva" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="responsable_inscripto">Responsable Inscripto</option>
+                                        <option value="monotributo">Monotributo</option>
+                                        <option value="exento">Exento</option>
+                                        <option value="consumidor_final">Consumidor Final</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Dirección -->
+                                <div class="form-grupo form-grupo-full">
+                                    <label class="form-label">Dirección</label>
+                                    <input type="text" class="form-input" id="direccion" 
+                                           maxlength="200" placeholder="Calle y número">
+                                </div>
+                                
+                                <!-- Ciudad -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Ciudad</label>
+                                    <input type="text" class="form-input" id="ciudad" 
+                                           maxlength="50">
+                                </div>
+                                
+                                <!-- Provincia -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Provincia</label>
+                                    <select class="form-input" id="provincia">
+                                        <option value="">Seleccionar...</option>
+                                        <option value="buenos_aires">Buenos Aires</option>
+                                        <option value="caba">CABA</option>
+                                        <option value="catamarca">Catamarca</option>
+                                        <option value="chaco">Chaco</option>
+                                        <option value="chubut">Chubut</option>
+                                        <option value="cordoba">Córdoba</option>
+                                        <option value="corrientes">Corrientes</option>
+                                        <option value="entre_rios">Entre Ríos</option>
+                                        <option value="formosa">Formosa</option>
+                                        <option value="jujuy">Jujuy</option>
+                                        <option value="la_pampa">La Pampa</option>
+                                        <option value="la_rioja">La Rioja</option>
+                                        <option value="mendoza">Mendoza</option>
+                                        <option value="misiones">Misiones</option>
+                                        <option value="neuquen">Neuquén</option>
+                                        <option value="rio_negro">Río Negro</option>
+                                        <option value="salta">Salta</option>
+                                        <option value="san_juan">San Juan</option>
+                                        <option value="san_luis">San Luis</option>
+                                        <option value="santa_cruz">Santa Cruz</option>
+                                        <option value="santa_fe">Santa Fe</option>
+                                        <option value="santiago_del_estero">Santiago del Estero</option>
+                                        <option value="tierra_del_fuego">Tierra del Fuego</option>
+                                        <option value="tucuman">Tucumán</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Código Postal -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Código Postal</label>
+                                    <input type="text" class="form-input" id="codigo_postal" 
+                                           maxlength="10">
+                                </div>
+                                
+                                <!-- Teléfono -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-input" id="telefono" 
+                                           placeholder="+54 351 XXXXXXX">
+                                </div>
+                                
+                                <!-- Email -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Email de contacto</label>
+                                    <input type="email" class="form-input" id="email_contacto">
+                                </div>
+                                
+                                <!-- Sitio Web -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Sitio Web</label>
+                                    <input type="url" class="form-input" id="sitio_web" 
+                                           placeholder="https://...">
+                                </div>
+                            </div>
+                            
+                            <!-- Botón guardar -->
+                            <div class="form-acciones" id="accionesComercio">
+                                <button type="submit" class="btn btn-primario">
+                                    💾 Guardar Cambios
+                                </button>
+                                <span class="guardado-status" id="statusComercio"></span>
+                            </div>
+                        </form>
+                    </section>
+                    
+                    <!-- ============================================
+                         SECCIÓN 2: CONFIGURACIÓN DE VENTAS
+                    ============================================ -->
+                    <section class="config-seccion" id="seccion-ventas">
+                        <div class="seccion-header">
+                            <h2>💰 Configuración de Ventas</h2>
+                            <p class="seccion-descripcion">Opciones para el proceso de venta</p>
+                        </div>
+                        
+                        <form class="config-form" id="formVentas">
+                            <div class="form-grid">
+                                <!-- IVA por defecto -->
+                                <div class="form-grupo">
+                                    <label class="form-label">IVA por defecto</label>
+                                    <select class="form-input" id="iva_defecto">
+                                        <option value="21">21%</option>
+                                        <option value="10.5">10.5%</option>
+                                        <option value="0">0% (Exento)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Redondeo -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Redondeo de precios</label>
+                                    <select class="form-input" id="redondeo">
+                                        <option value="none">Sin redondeo</option>
+                                        <option value="0.10">A $0.10</option>
+                                        <option value="1">A $1.00</option>
+                                        <option value="5">A $5.00</option>
+                                        <option value="10">A $10.00</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Descuento máximo -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Descuento máximo sin autorización (%)</label>
+                                    <input type="number" class="form-input" id="descuento_max" 
+                                           min="0" max="100" value="10">
+                                </div>
+                                
+                                <!-- Toggles -->
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="iva_incluido" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">IVA incluido en precios</span>
+                                            <span class="toggle-desc">Los precios de productos ya incluyen IVA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="ventas_sin_stock">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Permitir ventas sin stock</span>
+                                            <span class="toggle-desc">Vender productos aunque no haya stock disponible</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="precios_personalizados">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Permitir precios personalizados</span>
+                                            <span class="toggle-desc">El vendedor puede modificar el precio al vender</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="requiere_cliente">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Requiere cliente en venta</span>
+                                            <span class="toggle-desc">Obligatorio seleccionar cliente para vender</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="ventas_credito">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Permitir ventas a crédito</span>
+                                            <span class="toggle-desc">Vender fiado a clientes con cuenta corriente</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Métodos de pago -->
+                                <div class="form-grupo form-grupo-full">
+                                    <label class="form-label">Métodos de pago activos</label>
+                                    <div class="checkbox-grupo">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_efectivo" checked>
+                                            <span>💵 Efectivo</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_debito" checked>
+                                            <span>💳 Débito</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_credito">
+                                            <span>💳 Crédito</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_qr">
+                                            <span>📱 QR/MercadoPago</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_transferencia">
+                                            <span>🏦 Transferencia</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="mp_cuenta_corriente">
+                                            <span>📝 Cuenta Corriente</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón guardar -->
+                            <div class="form-acciones" id="accionesVentas">
+                                <button type="submit" class="btn btn-primario">
+                                    💾 Guardar Cambios
+                                </button>
+                                <span class="guardado-status" id="statusVentas"></span>
+                            </div>
+                        </form>
+                    </section>
+                    
+                    <!-- ============================================
+                         SECCIÓN 3: CONFIGURACIÓN DE STOCK
+                    ============================================ -->
+                    <section class="config-seccion" id="seccion-stock">
+                        <div class="seccion-header">
+                            <h2>📦 Configuración de Stock</h2>
+                            <p class="seccion-descripcion">Control de inventario y alertas</p>
+                        </div>
+                        
+                        <form class="config-form" id="formStock">
+                            <div class="form-grid">
+                                <!-- Alerta stock bajo -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Alerta de stock bajo (cantidad)</label>
+                                    <input type="number" class="form-input" id="alerta_stock_bajo" 
+                                           min="0" value="5">
+                                    <span class="form-hint">Notificar cuando el stock sea menor a este valor</span>
+                                </div>
+                                
+                                <!-- Email notificaciones -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Email para notificaciones</label>
+                                    <input type="email" class="form-input" id="email_notificaciones" 
+                                           placeholder="alertas@micomercio.com">
+                                </div>
+                                
+                                <!-- Toggles -->
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="control_activo" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Control de stock activo</span>
+                                            <span class="toggle-desc">Llevar registro de existencias de productos</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="stock_negativo">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Permitir stock negativo</span>
+                                            <span class="toggle-desc">El stock puede quedar en valores negativos</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="notificar_email">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Notificar stock bajo por email</span>
+                                            <span class="toggle-desc">Enviar email cuando un producto tenga stock bajo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="actualizacion_automatica" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Actualización automática de stock</span>
+                                            <span class="toggle-desc">Descontar stock automáticamente al vender</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="mostrar_sin_stock" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Mostrar productos sin stock</span>
+                                            <span class="toggle-desc">Mostrar productos agotados en la lista de venta</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón guardar -->
+                            <div class="form-acciones" id="accionesStock">
+                                <button type="submit" class="btn btn-primario">
+                                    💾 Guardar Cambios
+                                </button>
+                                <span class="guardado-status" id="statusStock"></span>
+                            </div>
+                        </form>
+                    </section>
+                    
+                    <!-- ============================================
+                         SECCIÓN 4: CONFIGURACIÓN DE IMPRESIÓN
+                    ============================================ -->
+                    <section class="config-seccion" id="seccion-impresion">
+                        <div class="seccion-header">
+                            <h2>🖨️ Configuración de Impresión</h2>
+                            <p class="seccion-descripcion">Formato de tickets y comprobantes</p>
+                        </div>
+                        
+                        <form class="config-form" id="formImpresion">
+                            <div class="form-grid">
+                                <!-- Ancho ticket -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Ancho del ticket</label>
+                                    <select class="form-input" id="ancho_ticket">
+                                        <option value="58mm">58mm (térmico pequeño)</option>
+                                        <option value="80mm" selected>80mm (térmico estándar)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Copias -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Cantidad de copias</label>
+                                    <input type="number" class="form-input" id="copias" 
+                                           min="1" max="5" value="1">
+                                </div>
+                                
+                                <!-- Encabezado -->
+                                <div class="form-grupo form-grupo-full">
+                                    <label class="form-label">Encabezado del ticket</label>
+                                    <textarea class="form-input" id="encabezado" rows="2" 
+                                              maxlength="200" placeholder="Texto que aparece arriba del ticket"></textarea>
+                                </div>
+                                
+                                <!-- Pie -->
+                                <div class="form-grupo form-grupo-full">
+                                    <label class="form-label">Pie del ticket</label>
+                                    <textarea class="form-input" id="pie_ticket" rows="2" 
+                                              maxlength="200">¡Gracias por su compra!</textarea>
+                                </div>
+                                
+                                <!-- Toggles -->
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="mostrar_logo" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Mostrar logo en ticket</span>
+                                            <span class="toggle-desc">Incluir el logo del comercio en el encabezado</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="mostrar_iva" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Mostrar detalle de IVA</span>
+                                            <span class="toggle-desc">Desglosar el IVA en el ticket</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="imprimir_auto">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Imprimir automáticamente</span>
+                                            <span class="toggle-desc">Imprimir ticket al confirmar venta</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="codigo_barras">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Mostrar código de barras</span>
+                                            <span class="toggle-desc">Incluir código de barras del ticket</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón guardar -->
+                            <div class="form-acciones" id="accionesImpresion">
+                                <button type="submit" class="btn btn-primario">
+                                    💾 Guardar Cambios
+                                </button>
+                                <span class="guardado-status" id="statusImpresion"></span>
+                            </div>
+                        </form>
+                    </section>
+                    
+                    <!-- ============================================
+                         SECCIÓN 5: CONFIGURACIÓN DE APLICACIÓN
+                    ============================================ -->
+                    <section class="config-seccion" id="seccion-aplicacion">
+                        <div class="seccion-header">
+                            <h2>🎨 Configuración de Aplicación</h2>
+                            <p class="seccion-descripcion">Personalización y preferencias</p>
+                        </div>
+                        
+                        <form class="config-form" id="formAplicacion">
+                            <div class="form-grid">
+                                <!-- Tema -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-input" id="tema">
+                                        <option value="system">Sistema (automático)</option>
+                                        <option value="light">Claro</option>
+                                        <option value="dark">Oscuro</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Color principal -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Color principal</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" class="form-color" id="color_principal" value="#3498db">
+                                        <input type="text" class="form-input form-input-color" id="color_principal_text" 
+                                               value="#3498db" maxlength="7">
+                                    </div>
+                                </div>
+                                
+                                <!-- Formato fecha -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Formato de fecha</label>
+                                    <select class="form-input" id="formato_fecha">
+                                        <option value="DD/MM/YYYY">DD/MM/YYYY (31/12/2025)</option>
+                                        <option value="MM/DD/YYYY">MM/DD/YYYY (12/31/2025)</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD (2025-12-31)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Formato hora -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Formato de hora</label>
+                                    <select class="form-input" id="formato_hora">
+                                        <option value="24h">24 horas (14:30)</option>
+                                        <option value="12h">12 horas (2:30 PM)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Tiempo inactividad -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Tiempo de inactividad (minutos)</label>
+                                    <input type="number" class="form-input" id="tiempo_inactividad" 
+                                           min="5" max="120" value="30">
+                                    <span class="form-hint">Cerrar sesión automáticamente después de este tiempo</span>
+                                </div>
+                                
+                                <!-- Zona horaria -->
+                                <div class="form-grupo">
+                                    <label class="form-label">Zona horaria</label>
+                                    <select class="form-input" id="zona_horaria">
+                                        <option value="America/Argentina/Buenos_Aires">Buenos Aires</option>
+                                        <option value="America/Argentina/Cordoba">Córdoba</option>
+                                        <option value="America/Argentina/Mendoza">Mendoza</option>
+                                        <option value="America/Argentina/Salta">Salta</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Toggles -->
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="sonidos" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Sonidos de notificación</span>
+                                            <span class="toggle-desc">Reproducir sonidos en alertas y acciones</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grupo form-grupo-full">
+                                    <div class="toggle-grupo">
+                                        <label class="toggle">
+                                            <input type="checkbox" id="animaciones" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Animaciones</span>
+                                            <span class="toggle-desc">Usar animaciones en la interfaz</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón guardar -->
+                            <div class="form-acciones" id="accionesAplicacion">
+                                <button type="submit" class="btn btn-primario">
+                                    💾 Guardar Cambios
+                                </button>
+                                <span class="guardado-status" id="statusAplicacion"></span>
+                            </div>
+                        </form>
+                    </section>
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast de notificaciones -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Librerías externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/configuracion.js"></script>
+</body>
+</html>
+
+

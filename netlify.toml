@@ -1,0 +1,58 @@
+# ============================================
+# Configuración de Netlify para GestiónKiosco
+# ============================================
+
+[build]
+  # No hay proceso de build, es una app estática
+  # Publish directory es la raíz del proyecto
+  publish = "."
+
+[[redirects]]
+  # Redirigir todas las rutas a index.html para SPA-like routing
+  # Útil si en el futuro agregás routing del lado del cliente
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+# Headers para seguridad y rendimiento
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Habilitar CORS si es necesario
+    Access-Control-Allow-Origin = "*"
+    
+    # Cache para archivos estáticos (ajustar según necesidad)
+    Cache-Control = "public, max-age=3600"
+    
+    # Seguridad
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Variables de entorno (si las necesitás en el futuro)
+# Descomentá y configurá según tu necesidad
+# [context.production.environment]
+#   SUPABASE_URL = "tu-url-de-supabase"
+#   SUPABASE_ANON_KEY = "tu-key-publica"
+

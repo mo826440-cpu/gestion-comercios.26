@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Panel de Mantenimiento - GestiónKiosco">
+    <title>Mantenimiento - GestiónKiosco</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/mantenimiento.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE MANTENIMIENTO
+         Panel técnico exclusivo para rol "programador"
+         
+         SEGURIDAD:
+         - Solo accesible con rol === "programador"
+         - Usuario programador NO se puede crear desde la app
+         - Solo existe si fue creado manualmente en Supabase
+         - NO se sincroniza con IndexedDB
+    ============================================ -->
+    
+    <!-- Header -->
+    <header class="header-mant">
+        <div class="contenedor header-contenido">
+            <div class="header-izq">
+                <span class="header-icono">🔧</span>
+                <div class="header-titulo">
+                    <h1>Panel de Mantenimiento</h1>
+                    <span class="header-badge">SOLO PROGRAMADOR</span>
+                </div>
+            </div>
+            <div class="header-der">
+                <span class="usuario-rol" id="usuarioInfo">Cargando...</span>
+                <a href="inicio.html" class="btn-volver">← Volver al Inicio</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-mant">
+        <div class="contenedor">
+            
+            <!-- ============================================
+                 AVISO IMPORTANTE - DATOS DEL PROGRAMADOR
+            ============================================ -->
+            <section class="mant-aviso mant-aviso-seguridad" id="avisoProgramador">
+                <div class="aviso-icono">🔒</div>
+                <div class="aviso-contenido">
+                    <h3>Información de Seguridad</h3>
+                    <p>
+                        <strong>Los datos del usuario "programador" NO se sincronizan con IndexedDB.</strong>
+                        Esto es intencional por seguridad:
+                    </p>
+                    <ul>
+                        <li>✓ El rol <code>programador</code> solo existe en Supabase</li>
+                        <li>✓ No se puede crear desde la aplicación</li>
+                        <li>✓ No se replica a bases de datos locales</li>
+                        <li>✓ Acceso exclusivo al panel de mantenimiento</li>
+                    </ul>
+                    <p class="aviso-nota">
+                        💡 Por esta razón, siempre habrá diferencia entre los registros de Supabase e IndexedDB.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 1: ESTADO DE MEMORIA
+            ============================================ -->
+            <section class="mant-seccion" id="seccionMemoria">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">💾</span>
+                        Estado de Memoria
+                    </h2>
+                    <button class="btn-actualizar" id="btnActualizarMemoria" title="Actualizar">
+                        🔄 Actualizar
+                    </button>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="memoria-grid">
+                        <!-- Memoria Supabase -->
+                        <div class="memoria-card">
+                            <h3>☁️ Supabase (Remoto)</h3>
+                            <div class="memoria-dato" id="memoriaSupabase">
+                                <span class="memoria-valor">--</span>
+                                <span class="memoria-label">registros totales</span>
+                            </div>
+                            <div class="memoria-detalle" id="memoriaSupabaseDetalle">
+                                Cargando...
+                            </div>
+                        </div>
+                        
+                        <!-- Memoria IndexedDB -->
+                        <div class="memoria-card">
+                            <h3>📱 IndexedDB (Local)</h3>
+                            <div class="memoria-dato" id="memoriaIndexedDB">
+                                <span class="memoria-valor">--</span>
+                                <span class="memoria-label">registros locales</span>
+                            </div>
+                            <div class="memoria-detalle" id="memoriaIndexedDBDetalle">
+                                Cargando...
+                            </div>
+                        </div>
+                        
+                        <!-- Memoria por comercio -->
+                        <div class="memoria-card memoria-card-wide">
+                            <h3>🏪 Uso por Comercio (Supabase)</h3>
+                            <div class="tabla-container" id="memoriaPorComercio">
+                                <p class="cargando">Cargando datos...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 2: ESTADÍSTICAS DE USO
+            ============================================ -->
+            <section class="mant-seccion" id="seccionEstadisticas">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">📈</span>
+                        Estadísticas del Sistema
+                    </h2>
+                    <button class="btn-actualizar" id="btnActualizarEstadisticas" title="Actualizar">
+                        🔄 Actualizar
+                    </button>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icono">🏪</span>
+                            <span class="stat-valor" id="totalComercios">--</span>
+                            <span class="stat-label">Comercios</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icono">👥</span>
+                            <span class="stat-valor" id="totalUsuarios">--</span>
+                            <span class="stat-label">Usuarios</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icono">📦</span>
+                            <span class="stat-valor" id="totalProductos">--</span>
+                            <span class="stat-label">Productos</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icono">🛒</span>
+                            <span class="stat-valor" id="totalVentas">--</span>
+                            <span class="stat-label">Ventas</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalle por comercio -->
+                    <div class="detalle-comercios">
+                        <h3>Detalle por Comercio</h3>
+                        <div class="tabla-container" id="detalleComerciosTabla">
+                            <p class="cargando">Cargando datos...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 3: ESTRUCTURA DE BASES DE DATOS
+            ============================================ -->
+            <section class="mant-seccion" id="seccionEstructura">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">🗄️</span>
+                        Estructura de Bases de Datos
+                    </h2>
+                    <button class="btn-actualizar" id="btnActualizarEstructura" title="Actualizar">
+                        🔄 Actualizar
+                    </button>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="db-grid">
+                        <!-- Supabase -->
+                        <div class="db-card">
+                            <h3>☁️ Supabase (PostgreSQL)</h3>
+                            <div class="db-info">
+                                <span class="db-total" id="supabaseTotalTablas">-- tablas</span>
+                            </div>
+                            <div class="tabla-container tabla-scroll" id="supabaseEstructura">
+                                <p class="cargando">Cargando estructura...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- IndexedDB -->
+                        <div class="db-card">
+                            <h3>📱 IndexedDB (Dexie)</h3>
+                            <div class="db-info">
+                                <span class="db-total" id="indexedDBTotalStores">-- object stores</span>
+                            </div>
+                            <div class="tabla-container tabla-scroll" id="indexedDBEstructura">
+                                <p class="cargando">Cargando estructura...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 4: SINCRONIZACIÓN MANUAL
+            ============================================ -->
+            <section class="mant-seccion" id="seccionSync">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">🔄</span>
+                        Sincronización Manual
+                    </h2>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="sync-panel">
+                        <div class="sync-info">
+                            <p>Forzar sincronización completa entre Supabase e IndexedDB.</p>
+                            <p class="sync-advertencia">⚠️ Esta operación puede tardar dependiendo de la cantidad de datos.</p>
+                        </div>
+                        
+                        <div class="sync-estado" id="syncEstado">
+                            <span class="sync-icono">⏸️</span>
+                            <span class="sync-texto">Listo para sincronizar</span>
+                        </div>
+                        
+                        <button class="btn-sync" id="btnForzarSync">
+                            🔄 Forzar Sincronización Supabase ⇄ IndexedDB
+                        </button>
+                        
+                        <div class="sync-log" id="syncLog">
+                            <!-- Log de sincronización -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 5: MANTENIMIENTO DE DATOS LOCALES
+            ============================================ -->
+            <section class="mant-seccion" id="seccionDatosLocales">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">🧹</span>
+                        Mantenimiento de Datos Locales
+                    </h2>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="datos-locales-panel">
+                        <!-- Estado de sincronización -->
+                        <div class="sync-diferencias" id="syncDiferencias">
+                            <h4>📊 Diferencias Supabase vs IndexedDB</h4>
+                            <div class="tabla-container" id="tablaDiferencias">
+                                <p class="cargando">Cargando comparación...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Acciones de limpieza -->
+                        <div class="limpieza-acciones">
+                            <div class="limpieza-info">
+                                <h4>🧹 Limpiar Datos Locales</h4>
+                                <p>Elimina todos los datos de IndexedDB y vuelve a descargar desde Supabase.</p>
+                                <p class="limpieza-advertencia">⚠️ Esta acción eliminará datos no sincronizados. Asegurate de sincronizar primero.</p>
+                            </div>
+                            
+                            <div class="limpieza-botones">
+                                <button class="btn-limpieza btn-limpieza-parcial" id="btnLimpiarDuplicados">
+                                    🔄 Limpiar Duplicados
+                                </button>
+                                <button class="btn-limpieza btn-limpieza-total" id="btnLimpiarTodo">
+                                    🗑️ Limpiar Todo y Re-sincronizar
+                                </button>
+                            </div>
+                            
+                            <div class="limpieza-estado" id="limpiezaEstado"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============================================
+                 SECCIÓN 6: ENLACES EXTERNOS
+            ============================================ -->
+            <section class="mant-seccion" id="seccionEnlaces">
+                <div class="seccion-header">
+                    <h2 class="seccion-titulo">
+                        <span class="seccion-icono">🔗</span>
+                        Enlaces Externos
+                    </h2>
+                </div>
+                
+                <div class="seccion-contenido">
+                    <div class="enlaces-grid">
+                        <a href="https://supabase.com/dashboard/project/jnplnwpofxzfqchkvgpv" 
+                           target="_blank" 
+                           class="enlace-card enlace-supabase">
+                            <span class="enlace-icono">⚡</span>
+                            <span class="enlace-texto">Abrir proyecto en Supabase</span>
+                            <span class="enlace-arrow">→</span>
+                        </a>
+                        
+                        <a href="#" 
+                           target="_blank" 
+                           class="enlace-card enlace-netlify"
+                           id="enlaceNetlify">
+                            <span class="enlace-icono">🚀</span>
+                            <span class="enlace-texto">Abrir proyecto en Netlify</span>
+                            <span class="enlace-arrow">→</span>
+                        </a>
+                        
+                        <a href="https://github.com" 
+                           target="_blank" 
+                           class="enlace-card enlace-github">
+                            <span class="enlace-icono">🐙</span>
+                            <span class="enlace-texto">Repositorio GitHub</span>
+                            <span class="enlace-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-mant">
+        <div class="contenedor">
+            <p>🔧 Panel de Mantenimiento • Solo acceso autorizado • GestiónKiosco v1.0.0</p>
+        </div>
+    </footer>
+
+    <!-- Librerías externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/mantenimiento.js"></script>
+</body>
+</html>
+
