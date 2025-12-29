@@ -41,13 +41,20 @@ function canInstallPWA() {
  */
 function mostrarBotonInstalacion() {
     const installSection = document.getElementById('pwa-install-section');
-    if (!installSection) return;
+    if (!installSection) {
+        console.warn('⚠️ Sección PWA no encontrada en el DOM');
+        return;
+    }
     
     // Si ya está instalada, ocultar
     if (isPWAInstalled()) {
         installSection.style.display = 'none';
+        console.log('ℹ️ PWA ya instalada, ocultando sección');
         return;
     }
+    
+    // Mostrar la sección primero
+    installSection.style.display = 'block';
     
     // Mostrar según el dispositivo
     const androidBtn = document.getElementById('pwa-install-android');
@@ -55,14 +62,28 @@ function mostrarBotonInstalacion() {
     const windowsBtn = document.getElementById('pwa-install-windows');
     const genericBtn = document.getElementById('pwa-install-generic');
     
+    // Ocultar todos primero
+    if (androidBtn) androidBtn.style.display = 'none';
+    if (iosBtn) iosBtn.style.display = 'none';
+    if (windowsBtn) windowsBtn.style.display = 'none';
+    if (genericBtn) genericBtn.style.display = 'none';
+    
+    // Mostrar el apropiado
     if (isAndroid && androidBtn) {
-        androidBtn.style.display = 'block';
+        androidBtn.style.display = 'flex';
+        console.log('📱 Mostrando botón Android');
     } else if (isIOS && iosBtn) {
-        iosBtn.style.display = 'block';
+        iosBtn.style.display = 'flex';
+        console.log('🍎 Mostrando botón iOS');
     } else if (isWindows && windowsBtn) {
-        windowsBtn.style.display = 'block';
+        windowsBtn.style.display = 'flex';
+        console.log('🪟 Mostrando botón Windows');
     } else if (genericBtn) {
-        genericBtn.style.display = 'block';
+        genericBtn.style.display = 'flex';
+        console.log('📱 Mostrando botón genérico');
+    } else {
+        // Si no hay botones, mostrar la sección igual para que se vea
+        console.log('ℹ️ Mostrando sección PWA sin botones específicos');
     }
 }
 
@@ -217,9 +238,23 @@ function initPWA() {
     registrarServiceWorker();
     
     // Mostrar botón de instalación si corresponde
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'complete') {
+        setTimeout(() => {
+            mostrarBotonInstalacion();
+        }, 500);
+    } else {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                mostrarBotonInstalacion();
+            }, 500);
+        });
+    }
+    
+    // También intentar mostrar después de un tiempo por si acaso
     setTimeout(() => {
         mostrarBotonInstalacion();
-    }, 1000);
+    }, 2000);
 }
 
 // Exportar funciones para uso global

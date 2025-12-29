@@ -63,6 +63,11 @@ async function cacheFirst(request) {
 
 // Estrategia: Network First para datos dinámicos
 async function networkFirst(request) {
+    // No cachear requests POST, PUT, DELETE, etc.
+    if (request.method !== 'GET') {
+        return fetch(request);
+    }
+    
     try {
         const response = await fetch(request);
         if (response && response.status === 200) {
@@ -122,11 +127,18 @@ self.addEventListener('activate', (event) => {
 // Interceptar requests
 self.addEventListener('fetch', (event) => {
     const { request } = event;
+    
+    // No cachear requests que no sean GET
+    if (request.method !== 'GET') {
+        event.respondWith(fetch(request));
+        return;
+    }
+    
     const url = new URL(request.url);
     
-    // Ignorar requests a Supabase API (siempre online)
+    // Ignorar requests a Supabase API (siempre online, no cachear)
     if (url.hostname.includes('supabase.co')) {
-        event.respondWith(networkFirst(request));
+        event.respondWith(fetch(request));
         return;
     }
     
@@ -139,7 +151,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
     
-    // Para otros recursos, usar network first
+    // Para otros recursos GET, usar network first
     event.respondWith(networkFirst(request));
 });
 

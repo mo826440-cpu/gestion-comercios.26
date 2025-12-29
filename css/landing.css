@@ -423,6 +423,11 @@
     color: white;
     padding: var(--espaciado-xxl) 0;
     margin: var(--espaciado-xxl) 0;
+    display: block; /* Mostrar por defecto */
+}
+
+.pwa-install[style*="display: none"] {
+    display: none !important; /* Respetar si se oculta explícitamente */
 }
 
 .pwa-install .seccion-titulo {
