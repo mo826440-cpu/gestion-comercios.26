@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generador de Íconos PWA</title>
+</head>
+<body>
+    <h1>Generador de Íconos para GestiónKiosco</h1>
+    <p>Este archivo es temporal. Los íconos se generarán automáticamente.</p>
+    <canvas id="iconCanvas" width="512" height="512"></canvas>
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Fondo azul
+        ctx.fillStyle = '#2563eb';
+        ctx.fillRect(0, 0, 512, 512);
+        
+        // Texto del ícono (emoji de kiosco)
+        ctx.font = '300px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('🏪', 256, 256);
+        
+        // Descargar en diferentes tamaños
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        sizes.forEach(size => {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = size;
+            tempCanvas.height = size;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.fillStyle = '#2563eb';
+            tempCtx.fillRect(0, 0, size, size);
+            tempCtx.font = (size * 0.6) + 'px Arial';
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            tempCtx.fillStyle = '#ffffff';
+            tempCtx.fillText('🏪', size/2, size/2);
+            
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = tempCanvas.toDataURL();
+            link.click();
+        });
+    </script>
+</body>
+</html>
+

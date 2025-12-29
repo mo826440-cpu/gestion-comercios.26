@@ -6,6 +6,13 @@
     <meta name="description" content="GestiónKiosco v1.0.0 - Sistema de gestión para kioscos y pequeños comercios. Funciona offline y es fácil de usar.">
     <title>GestiónKiosco v1.0.0 - Sistema para Kioscos y Comercios</title>
     
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GestiónKiosco">
+    <link rel="manifest" href="manifest.json">
+    
     <!-- Estilos -->
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/landing.css">
@@ -152,6 +159,57 @@
         </div>
     </section>
 
+    <!-- Descargar como App -->
+    <section id="pwa-install-section" class="pwa-install" style="display: none;">
+        <div class="contenedor">
+            <h2 class="seccion-titulo texto-centro">
+                📱 Descargá GestiónKiosco como App
+            </h2>
+            <p class="seccion-descripcion texto-centro">
+                Instalá el sistema en tu dispositivo y usalo sin depender del navegador. 
+                Funciona offline y se actualiza automáticamente.
+            </p>
+            
+            <div class="pwa-botones">
+                <!-- Botón Android -->
+                <button id="pwa-install-android" class="pwa-btn pwa-btn-android" onclick="instalarPWA()" style="display: none;">
+                    <span class="pwa-icono">🤖</span>
+                    <div class="pwa-btn-contenido">
+                        <strong>Instalar en Android</strong>
+                        <small>Chrome, Edge, Opera</small>
+                    </div>
+                </button>
+                
+                <!-- Botón iOS -->
+                <button id="pwa-install-ios" class="pwa-btn pwa-btn-ios" onclick="mostrarInstrucciones()" style="display: none;">
+                    <span class="pwa-icono">🍎</span>
+                    <div class="pwa-btn-contenido">
+                        <strong>Instalar en iPhone/iPad</strong>
+                        <small>Safari</small>
+                    </div>
+                </button>
+                
+                <!-- Botón Windows -->
+                <button id="pwa-install-windows" class="pwa-btn pwa-btn-windows" onclick="instalarPWA()" style="display: none;">
+                    <span class="pwa-icono">🪟</span>
+                    <div class="pwa-btn-contenido">
+                        <strong>Instalar en Windows</strong>
+                        <small>Edge, Chrome</small>
+                    </div>
+                </button>
+                
+                <!-- Botón Genérico -->
+                <button id="pwa-install-generic" class="pwa-btn pwa-btn-generic" onclick="mostrarInstrucciones()" style="display: none;">
+                    <span class="pwa-icono">📱</span>
+                    <div class="pwa-btn-contenido">
+                        <strong>Instalar App</strong>
+                        <small>Ver instrucciones</small>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Call to Action -->
     <section class="cta">
         <div class="contenedor cta-contenido">
@@ -195,6 +253,49 @@
     <script src="js/supabase.js"></script>
     <script src="js/indexeddb.js"></script>
     <script src="js/landing.js"></script>
+    <script src="js/pwa-install.js"></script>
+    
+    <!-- Modal de Instrucciones -->
+    <div id="pwa-instructions-modal" class="pwa-modal" style="display: none;" onclick="if(event.target.id === 'pwa-instructions-modal') cerrarInstrucciones()">
+        <div class="pwa-modal-contenido" onclick="event.stopPropagation()">
+            <button class="pwa-modal-cerrar" onclick="cerrarInstrucciones()">×</button>
+            <h2>📱 Cómo Instalar GestiónKiosco</h2>
+            
+            <!-- Instrucciones Android -->
+            <div id="instructions-android" style="display: none;">
+                <h3>🤖 Android (Chrome/Edge)</h3>
+                <ol>
+                    <li>Abrí el menú del navegador (3 puntos arriba a la derecha)</li>
+                    <li>Seleccioná <strong>"Instalar app"</strong> o <strong>"Agregar a pantalla de inicio"</strong></li>
+                    <li>Confirmá la instalación</li>
+                    <li>¡Listo! La app aparecerá en tu pantalla de inicio</li>
+                </ol>
+            </div>
+            
+            <!-- Instrucciones iOS -->
+            <div id="instructions-ios" style="display: none;">
+                <h3>🍎 iPhone/iPad (Safari)</h3>
+                <ol>
+                    <li>Abrí el menú de compartir (cuadrado con flecha arriba)</li>
+                    <li>Seleccioná <strong>"Agregar a pantalla de inicio"</strong></li>
+                    <li>Personalizá el nombre si querés</li>
+                    <li>Hacé clic en <strong>"Agregar"</strong></li>
+                    <li>¡Listo! La app aparecerá en tu pantalla de inicio</li>
+                </ol>
+            </div>
+            
+            <!-- Instrucciones Windows -->
+            <div id="instructions-windows" style="display: none;">
+                <h3>🪟 Windows (Edge/Chrome)</h3>
+                <ol>
+                    <li>Buscá el ícono de <strong>"Instalar"</strong> en la barra de direcciones</li>
+                    <li>O andá al menú (3 puntos) → <strong>"Aplicaciones"</strong> → <strong>"Instalar esta aplicación"</strong></li>
+                    <li>Confirmá la instalación</li>
+                    <li>¡Listo! La app aparecerá en el menú de inicio</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

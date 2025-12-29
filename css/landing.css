@@ -415,3 +415,191 @@
     animation: float 6s ease-in-out infinite;
 }
 
+/* ============================================
+   PWA INSTALL SECTION
+============================================ */
+.pwa-install {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: var(--espaciado-xxl) 0;
+    margin: var(--espaciado-xxl) 0;
+}
+
+.pwa-install .seccion-titulo {
+    color: white;
+    margin-bottom: var(--espaciado-md);
+}
+
+.pwa-install .seccion-descripcion {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--espaciado-xl);
+}
+
+.pwa-botones {
+    display: flex;
+    gap: var(--espaciado-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pwa-btn {
+    background: white;
+    border: none;
+    border-radius: var(--radio-md);
+    padding: var(--espaciado-lg);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-md);
+    min-width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.pwa-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pwa-btn:active {
+    transform: translateY(0);
+}
+
+.pwa-icono {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.pwa-btn-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+}
+
+.pwa-btn-contenido strong {
+    color: var(--color-texto);
+    font-size: var(--tamano-md);
+}
+
+.pwa-btn-contenido small {
+    color: var(--color-texto-secundario);
+    font-size: var(--tamano-sm);
+}
+
+/* Modal de Instrucciones */
+.pwa-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--espaciado-md);
+}
+
+.pwa-modal-contenido {
+    background: white;
+    border-radius: var(--radio-lg);
+    padding: var(--espaciado-xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.pwa-modal-cerrar {
+    position: absolute;
+    top: var(--espaciado-md);
+    right: var(--espaciado-md);
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--color-texto-secundario);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.pwa-modal-cerrar:hover {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+.pwa-modal-contenido h2 {
+    margin-bottom: var(--espaciado-lg);
+    color: var(--color-texto);
+}
+
+.pwa-modal-contenido h3 {
+    margin-top: var(--espaciado-lg);
+    margin-bottom: var(--espaciado-md);
+    color: var(--color-primario);
+}
+
+.pwa-modal-contenido ol {
+    padding-left: var(--espaciado-lg);
+    line-height: 1.8;
+}
+
+.pwa-modal-contenido li {
+    margin-bottom: var(--espaciado-sm);
+    color: var(--color-texto);
+}
+
+/* Mensajes PWA */
+.pwa-mensaje {
+    position: fixed;
+    bottom: var(--espaciado-xl);
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--color-primario);
+    color: white;
+    padding: var(--espaciado-md) var(--espaciado-lg);
+    border-radius: var(--radio-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.pwa-mensaje.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.pwa-mensaje-exito {
+    background: #10b981;
+}
+
+.pwa-mensaje-error {
+    background: #ef4444;
+}
+
+/* Responsive PWA */
+@media (max-width: 768px) {
+    .pwa-botones {
+        flex-direction: column;
+    }
+    
+    .pwa-btn {
+        width: 100%;
+    }
+    
+    .pwa-modal-contenido {
+        padding: var(--espaciado-lg);
+    }
+}
+
