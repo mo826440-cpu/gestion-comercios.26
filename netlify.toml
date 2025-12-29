@@ -22,8 +22,8 @@
     # Habilitar CORS si es necesario
     Access-Control-Allow-Origin = "*"
     
-    # Cache para archivos estáticos (ajustar según necesidad)
-    Cache-Control = "public, max-age=3600"
+    # Cache para archivos estáticos (reducido para desarrollo)
+    Cache-Control = "public, max-age=0, must-revalidate"
     
     # Seguridad
     X-Content-Type-Options = "nosniff"
@@ -38,17 +38,20 @@
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    # Cache reducido para desarrollo (cambiar a 31536000 en producción)
+    Cache-Control = "public, max-age=300, must-revalidate"
 
 [[headers]]
   for = "/*.js"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    # Cache reducido para desarrollo (cambiar a 31536000 en producción)
+    Cache-Control = "public, max-age=300, must-revalidate"
 
 [[headers]]
   for = "/img/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    # Cache reducido para desarrollo (cambiar a 31536000 en producción)
+    Cache-Control = "public, max-age=3600"
 
 # Variables de entorno (si las necesitás en el futuro)
 # Descomentá y configurá según tu necesidad
