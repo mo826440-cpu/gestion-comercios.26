@@ -196,6 +196,12 @@ function inicializarAccesosRapidos() {
                 return;
             }
             
+            // Si es usuarios, navegar a la pantalla de usuarios
+            if (modulo === 'usuarios') {
+                window.location.href = 'usuarios.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
