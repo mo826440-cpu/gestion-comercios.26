@@ -31,6 +31,11 @@
             
             <!-- Información del usuario -->
             <div class="usuario-info">
+                <!-- Botón de actualización (solo visible cuando hay actualización disponible) -->
+                <button class="btn-actualizar-app" id="btnActualizarApp" title="Actualizar aplicación" style="display: none;" onclick="actualizarApp()">
+                    <span class="icono-actualizar">🔄</span>
+                    <span class="texto-actualizar">Actualizar</span>
+                </button>
                 <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
                 <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
                     <span class="icono-salir">🚪</span>
@@ -173,6 +178,7 @@
     <script src="js/supabase.js"></script>
     <script src="js/indexeddb.js"></script>
     <script src="js/sync.js"></script>
+    <script src="js/pwa-update.js"></script>
     <script src="js/inicio.js"></script>
 </body>
 </html>
