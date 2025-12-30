@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Referencias - AdminisGo">
+    <title>Referencias - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/referencias.css">
+    
+    <!-- Favicon placeholder -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE REFERENCIAS
+         Gestión de: Categorías, Marcas, Proveedores,
+         Clientes y Productos
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="inicio.html" class="btn-volver" title="Volver al inicio">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Referencias</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Encabezado -->
+            <section class="seccion-encabezado">
+                <h1 class="titulo-principal">Referencias</h1>
+                <p class="descripcion">
+                    Gestioná las referencias base del sistema: categorías, marcas, proveedores, clientes y productos.
+                </p>
+            </section>
+            
+            <!-- Grid de subventanas -->
+            <section class="referencias-grid-section">
+                <div class="referencias-grid">
+                    <!-- Categorías -->
+                    <article class="referencia-card" data-subventana="categorias">
+                        <div class="referencia-icono referencia-icono-categorias">
+                            📂
+                        </div>
+                        <div class="referencia-info">
+                            <h3 class="referencia-titulo">Categorías</h3>
+                            <p class="referencia-descripcion">
+                                Organizá tus productos por categorías
+                            </p>
+                        </div>
+                        <span class="referencia-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Marcas -->
+                    <article class="referencia-card" data-subventana="marcas">
+                        <div class="referencia-icono referencia-icono-marcas">
+                            🏷️
+                        </div>
+                        <div class="referencia-info">
+                            <h3 class="referencia-titulo">Marcas</h3>
+                            <p class="referencia-descripcion">
+                                Gestioná las marcas de tus productos
+                            </p>
+                        </div>
+                        <span class="referencia-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Proveedores -->
+                    <article class="referencia-card" data-subventana="proveedores">
+                        <div class="referencia-icono referencia-icono-proveedores">
+                            🚚
+                        </div>
+                        <div class="referencia-info">
+                            <h3 class="referencia-titulo">Proveedores</h3>
+                            <p class="referencia-descripcion">
+                                Administrá tus proveedores y contactos
+                            </p>
+                        </div>
+                        <span class="referencia-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Clientes -->
+                    <article class="referencia-card" data-subventana="clientes">
+                        <div class="referencia-icono referencia-icono-clientes">
+                            👥
+                        </div>
+                        <div class="referencia-info">
+                            <h3 class="referencia-titulo">Clientes</h3>
+                            <p class="referencia-descripcion">
+                                Gestioná tu base de clientes
+                            </p>
+                        </div>
+                        <span class="referencia-estado">Próximamente</span>
+                    </article>
+                    
+                    <!-- Productos -->
+                    <article class="referencia-card" data-subventana="productos">
+                        <div class="referencia-icono referencia-icono-productos">
+                            📦
+                        </div>
+                        <div class="referencia-info">
+                            <h3 class="referencia-titulo">Productos</h3>
+                            <p class="referencia-descripcion">
+                                Administrá tu catálogo de productos
+                            </p>
+                        </div>
+                        <span class="referencia-estado">Próximamente</span>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/referencias.js"></script>
+</body>
+</html>
+
