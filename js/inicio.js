@@ -194,13 +194,22 @@ function inicializarAccesosRapidos() {
  */
 function mostrarMensajeModulo(modulo) {
     const nombresModulos = {
+        dashboard: 'Dashboard',
+        referencias: 'Referencias',
+        compras: 'Compras',
         ventas: 'Ventas',
-        productos: 'Productos',
-        stock: 'Stock',
-        configuracion: 'Configuración'
+        usuarios: 'Usuarios',
+        configuracion: 'Configuración',
+        mantenimiento: 'Mantenimiento'
     };
     
     const nombreModulo = nombresModulos[modulo] || modulo;
+    
+    // Si es configuración o mantenimiento, no mostrar mensaje (ya navega)
+    if (modulo === 'configuracion' || modulo === 'mantenimiento') {
+        return;
+    }
+    
     mostrarNotificacion(`El módulo de ${nombreModulo} estará disponible próximamente`, 'info');
 }
 
@@ -444,6 +453,21 @@ async function verificarAccesosEspeciales() {
                 accesoConfig.addEventListener('click', function() {
                     window.location.href = 'configuracion.html';
                 });
+            }
+        }
+        
+        // ============================================
+        // ACCESO A USUARIOS
+        // ============================================
+        const tienePermisoUsuarios = permisosUsuario.includes('USUARIOS_VER') || 
+                                     rolNombre === 'administrador';
+        
+        if (tienePermisoUsuarios) {
+            console.log('👥 Mostrando acceso a Usuarios');
+            
+            const accesoUsuarios = document.getElementById('accesoUsuarios');
+            if (accesoUsuarios) {
+                accesoUsuarios.style.display = 'flex';
             }
         }
         
