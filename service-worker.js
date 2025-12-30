@@ -5,8 +5,10 @@
    funcionamiento como Progressive Web App
 ============================================ */
 
-const CACHE_NAME = 'adminisgo-v1.0.0';
-const RUNTIME_CACHE = 'adminisgo-runtime-v1.0.0';
+// Versión del cache - Cambiar esto cuando haya actualizaciones importantes
+const CACHE_VERSION = '1.0.1';
+const CACHE_NAME = `adminisgo-v${CACHE_VERSION}`;
+const RUNTIME_CACHE = `adminisgo-runtime-v${CACHE_VERSION}`;
 
 // Archivos estáticos que se cachean al instalar
 // Nota: Rutas relativas (funcionan en dominio personalizado)
@@ -36,6 +38,7 @@ const STATIC_CACHE_URLS = [
     '/js/configuracion.js',
     '/js/sync.js',
     '/js/pwa-install.js',
+    '/js/pwa-update.js',
     '/manifest.json',
     '/service-worker.js'
 ];
@@ -158,7 +161,22 @@ self.addEventListener('fetch', (event) => {
 // Manejar mensajes desde la app
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
+        console.log('Service Worker: Recibido SKIP_WAITING, activando nuevo worker...');
         self.skipWaiting();
     }
+});
+
+// Notificar a los clientes cuando el nuevo service worker esté activo
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        self.clients.matchAll().then((clients) => {
+            clients.forEach((client) => {
+                client.postMessage({
+                    type: 'SW_ACTIVATED',
+                    message: 'Nuevo Service Worker activado'
+                });
+            });
+        })
+    );
 });
 
