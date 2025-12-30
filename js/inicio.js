@@ -184,6 +184,12 @@ function inicializarAccesosRapidos() {
                 return;
             }
             
+            // Si es ventas, navegar a la pantalla de ventas
+            if (modulo === 'ventas') {
+                window.location.href = 'ventas.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
