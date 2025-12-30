@@ -155,6 +155,11 @@ function mostrarMensajeSubventana(subventana) {
         return;
     }
     
+    if (subventana === 'proveedores') {
+        window.location.href = 'proveedores.html';
+        return;
+    }
+    
     const nombreSubventana = nombresSubventanas[subventana] || subventana;
     mostrarNotificacion(`La subventana de ${nombreSubventana} estará disponible próximamente`, 'info');
 }
