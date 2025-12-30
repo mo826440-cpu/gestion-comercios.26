@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Clientes - AdminisGo">
+    <title>Clientes - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/clientes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE CLIENTES
+         Gestión de clientes con indicadores de deudas
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="referencias.html" class="btn-volver" title="Volver a Referencias">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Clientes</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Indicadores superiores -->
+            <section class="indicadores-section">
+                <div class="indicador-card">
+                    <div class="indicador-icono">👥</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Clientes cargados</span>
+                        <span class="indicador-valor" id="totalClientes">0</span>
+                    </div>
+                </div>
+                <div class="indicador-card indicador-deuda">
+                    <div class="indicador-icono indicador-icono-deuda">💰</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Deuda total</span>
+                        <span class="indicador-valor" id="totalDeuda">$0,00</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Botón cargar nuevo cliente -->
+            <section class="acciones-section">
+                <button class="btn btn-primario btn-grande" id="btnNuevoCliente">
+                    <span class="btn-icono">➕</span>
+                    Cargar nuevo cliente
+                </button>
+            </section>
+            
+            <!-- Panel de carga (oculto por defecto) -->
+            <section class="panel-carga" id="panelCarga" style="display: none;">
+                <div class="panel-carga-contenido">
+                    <h3 class="panel-titulo">Nuevo Cliente</h3>
+                    
+                    <form id="formCliente" class="form-cliente">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombreCliente" class="form-label">
+                                    Nombre <span class="obligatorio">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nombreCliente" 
+                                    class="form-input" 
+                                    placeholder="Ej: Juan Pérez"
+                                    required
+                                    autocomplete="off"
+                                >
+                                <span class="form-error" id="errorNombre"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="documento" class="form-label">
+                                    Documento
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="documento" 
+                                    class="form-input" 
+                                    placeholder="DNI, CUIT, etc."
+                                    autocomplete="off"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telefono" class="form-label">
+                                    Teléfono
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="telefono" 
+                                    class="form-input" 
+                                    placeholder="(011) 1234-5678"
+                                    autocomplete="off"
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    Email
+                                </label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    class="form-input" 
+                                    placeholder="cliente@ejemplo.com"
+                                    autocomplete="off"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="direccion" class="form-label">
+                                Dirección
+                            </label>
+                            <input 
+                                type="text" 
+                                id="direccion" 
+                                class="form-input" 
+                                placeholder="Dirección completa"
+                                autocomplete="off"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="especificaciones" class="form-label">
+                                Especificaciones
+                            </label>
+                            <textarea 
+                                id="especificaciones" 
+                                class="form-textarea" 
+                                rows="3"
+                                placeholder="Información adicional sobre el cliente (opcional)"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-acciones">
+                            <button type="button" class="btn btn-outline" id="btnCancelar">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primario" id="btnGuardar">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- Tabla de clientes -->
+            <section class="tabla-section">
+                <div class="tabla-header">
+                    <h3 class="tabla-titulo">Listado de Clientes</h3>
+                    <div class="tabla-controls">
+                        <label for="registrosPorPagina" class="control-label">
+                            Registros por página:
+                        </label>
+                        <select id="registrosPorPagina" class="control-select">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tabla-container">
+                    <table class="tabla-datos" id="tablaClientes">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>
+                                    <div class="th-filter">
+                                        <span>Nombre</span>
+                                        <input 
+                                            type="text" 
+                                            class="filter-input" 
+                                            id="filterNombre"
+                                            placeholder="Filtrar..."
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </th>
+                                <th>Documento</th>
+                                <th>Teléfono</th>
+                                <th>Deuda</th>
+                                <th>Estado</th>
+                                <th>Fecha de registro/modificación</th>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyClientes">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="paginacion" id="paginacion">
+                    <!-- Se genera dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/clientes.js"></script>
+</body>
+</html>
+
