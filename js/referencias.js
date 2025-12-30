@@ -144,6 +144,12 @@ function mostrarMensajeSubventana(subventana) {
         productos: 'Productos'
     };
     
+    // Si es categorías, navegar directamente
+    if (subventana === 'categorias') {
+        window.location.href = 'categorias.html';
+        return;
+    }
+    
     const nombreSubventana = nombresSubventanas[subventana] || subventana;
     mostrarNotificacion(`La subventana de ${nombreSubventana} estará disponible próximamente`, 'info');
 }
@@ -223,4 +229,5 @@ async function cerrarSesionCompleta() {
     // 4. Redirigir al login
     navegarA(CONFIG.rutas.login);
 }
+
 
