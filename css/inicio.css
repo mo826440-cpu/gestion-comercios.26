@@ -328,16 +328,24 @@ body {
     font-size: 2rem;
 }
 
-.acceso-icono-ventas {
+.acceso-icono-dashboard {
+    background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
+}
+
+.acceso-icono-referencias {
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
 }
 
-.acceso-icono-productos {
-    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+.acceso-icono-compras {
+    background: linear-gradient(135deg, #fce7f3 0%, #f9a8d4 100%);
 }
 
-.acceso-icono-stock {
+.acceso-icono-ventas {
     background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
+}
+
+.acceso-icono-usuarios {
+    background: linear-gradient(135deg, #ddd6fe 0%, #a78bfa 100%);
 }
 
 .acceso-icono-config {

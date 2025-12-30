@@ -171,6 +171,13 @@ function inicializarAccesosRapidos() {
     accesos.forEach(acceso => {
         acceso.addEventListener('click', function() {
             const modulo = this.dataset.modulo;
+            
+            // Si es referencias, navegar a la pantalla de referencias
+            if (modulo === 'referencias') {
+                window.location.href = 'referencias.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
@@ -182,6 +189,13 @@ function inicializarAccesosRapidos() {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 const modulo = this.dataset.modulo;
+                
+                // Si es referencias, navegar a la pantalla de referencias
+                if (modulo === 'referencias') {
+                    window.location.href = 'referencias.html';
+                    return;
+                }
+                
                 mostrarMensajeModulo(modulo);
             }
         });
@@ -194,13 +208,22 @@ function inicializarAccesosRapidos() {
  */
 function mostrarMensajeModulo(modulo) {
     const nombresModulos = {
+        dashboard: 'Dashboard',
+        referencias: 'Referencias',
+        compras: 'Compras',
         ventas: 'Ventas',
-        productos: 'Productos',
-        stock: 'Stock',
-        configuracion: 'Configuración'
+        usuarios: 'Usuarios',
+        configuracion: 'Configuración',
+        mantenimiento: 'Mantenimiento'
     };
     
     const nombreModulo = nombresModulos[modulo] || modulo;
+    
+    // Si es configuración o mantenimiento, no mostrar mensaje (ya navega)
+    if (modulo === 'configuracion' || modulo === 'mantenimiento') {
+        return;
+    }
+    
     mostrarNotificacion(`El módulo de ${nombreModulo} estará disponible próximamente`, 'info');
 }
 
@@ -444,6 +467,21 @@ async function verificarAccesosEspeciales() {
                 accesoConfig.addEventListener('click', function() {
                     window.location.href = 'configuracion.html';
                 });
+            }
+        }
+        
+        // ============================================
+        // ACCESO A USUARIOS
+        // ============================================
+        const tienePermisoUsuarios = permisosUsuario.includes('USUARIOS_VER') || 
+                                     rolNombre === 'administrador';
+        
+        if (tienePermisoUsuarios) {
+            console.log('👥 Mostrando acceso a Usuarios');
+            
+            const accesoUsuarios = document.getElementById('accesoUsuarios');
+            if (accesoUsuarios) {
+                accesoUsuarios.style.display = 'flex';
             }
         }
         

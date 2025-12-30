@@ -32,6 +32,8 @@
     gap: var(--espaciado-sm);
     text-decoration: none;
     color: var(--color-texto);
+    height: auto;
+    max-height: none;
 }
 
 .logo-icono {
@@ -44,10 +46,15 @@
     color: var(--color-primario);
 }
 
+.logo .logo-general-img,
 .logo-general-img {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
+    height: 50px !important;
+    max-height: none !important;
+    min-height: 50px !important;
+    width: auto !important;
+    max-width: none !important;
+    object-fit: contain !important;
+    display: block !important;
 }
 
 .nav-principal {
