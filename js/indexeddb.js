@@ -14,7 +14,7 @@
 // ============================================
 
 const DB_NAME = 'GestionKioscosDB';
-const DB_VERSION = 5; // Incrementado para agregar tabla proveedores
+const DB_VERSION = 6; // Incrementado para agregar campos a clientes (saldo_pendiente, especificaciones, responsable_nombre)
 
 // Variable global para la base de datos
 let db = null;
@@ -203,6 +203,75 @@ async function initIndexedDB() {
             movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
         });
         
+        // Versión 6: Agregar campos a clientes (saldo_pendiente, especificaciones, responsable_nombre, telefono, email, direccion)
+        db.version(6).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, codigo_barra, precio_venta, activo, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        }).upgrade(async (trans) => {
+            console.log('🔄 Migrando a versión 6: Agregando campos a clientes...');
+            
+            // Actualizar clientes existentes
+            const clientes = await trans.table('clientes').toCollection().toArray();
+            for (const cliente of clientes) {
+                const actualizaciones = {};
+                
+                // Agregar created_at si no existe (usar updated_at como fallback)
+                if (!cliente.created_at) {
+                    actualizaciones.created_at = cliente.updated_at || new Date().toISOString();
+                }
+                
+                // Agregar saldo_pendiente si no existe (0 por defecto)
+                if (cliente.saldo_pendiente === undefined) {
+                    actualizaciones.saldo_pendiente = 0;
+                }
+                
+                // Agregar especificaciones si no existe (null por defecto)
+                if (cliente.especificaciones === undefined) {
+                    actualizaciones.especificaciones = null;
+                }
+                
+                // Agregar responsable_nombre si no existe (null por defecto)
+                if (cliente.responsable_nombre === undefined) {
+                    actualizaciones.responsable_nombre = null;
+                }
+                
+                // Agregar telefono, email, direccion si no existen
+                if (cliente.telefono === undefined) {
+                    actualizaciones.telefono = null;
+                }
+                if (cliente.email === undefined) {
+                    actualizaciones.email = null;
+                }
+                if (cliente.direccion === undefined) {
+                    actualizaciones.direccion = null;
+                }
+                
+                if (Object.keys(actualizaciones).length > 0) {
+                    await trans.table('clientes').update(cliente.id, actualizaciones);
+                }
+            }
+            
+            console.log('✅ Migración a versión 6 completada');
+        });
+        
         // Definir esquema de la base de datos (versión actual)
         db.version(DB_VERSION).stores({
             // ============================================
@@ -245,7 +314,7 @@ async function initIndexedDB() {
             marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
             proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
             productos: 'id, comercio_id, nombre, codigo_barra, precio_venta, activo, sync_id, updated_at',
-            clientes: 'id, comercio_id, nombre, documento, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
             
             // Stock
             stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
