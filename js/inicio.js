@@ -190,6 +190,12 @@ function inicializarAccesosRapidos() {
                 return;
             }
             
+            // Si es dashboard, navegar a la pantalla de dashboard
+            if (modulo === 'dashboard') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
