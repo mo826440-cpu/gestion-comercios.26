@@ -178,6 +178,12 @@ function inicializarAccesosRapidos() {
                 return;
             }
             
+            // Si es compras, navegar a la pantalla de compras
+            if (modulo === 'compras') {
+                window.location.href = 'compras.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
