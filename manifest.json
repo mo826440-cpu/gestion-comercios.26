@@ -1,13 +1,13 @@
 {
-  "name": "GestiónKiosco - Sistema de Gestión Comercial",
-  "short_name": "GestiónKiosco",
+  "name": "AdminisGo - Sistema de Gestión Comercial",
+  "short_name": "AdminisGo",
   "description": "Sistema de gestión para kioscos y pequeños comercios. Funciona offline y es fácil de usar.",
-  "start_url": "/sistema_kioscos/index.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "any",
-  "scope": "/sistema_kioscos/",
+  "scope": "/",
   "lang": "es",
   "dir": "ltr",
   "icons": [
@@ -67,7 +67,7 @@
       "name": "Iniciar Sesión",
       "short_name": "Login",
       "description": "Acceder al sistema",
-      "url": "/sistema_kioscos/login.html",
+      "url": "/login.html",
       "icons": [
         {
           "src": "assets/icons/icon-96x96.png",

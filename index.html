@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GestiónKiosco v1.0.0 - Sistema de gestión para kioscos y pequeños comercios. Funciona offline y es fácil de usar.">
-    <title>GestiónKiosco v1.0.0 - Sistema para Kioscos y Comercios</title>
+    <meta name="description" content="AdminisGo v1.0.0 - Sistema de gestión para kioscos y pequeños comercios. Funciona offline y es fácil de usar.">
+    <title>AdminisGo v1.0.0 - Sistema para Kioscos y Comercios</title>
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="GestiónKiosco">
+    <meta name="apple-mobile-web-app-title" content="AdminisGo">
     <link rel="manifest" href="manifest.json">
     
     <!-- Estilos -->
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/landing.css">
     
-    <!-- Favicon placeholder -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/icons/IconoAG.png">
 </head>
 <body>
     <!-- ============================================
@@ -31,8 +32,8 @@
     <header class="header">
         <div class="contenedor header-contenido">
             <div class="logo">
-                <span class="logo-icono">🏪</span>
-                <span class="logo-texto">GestiónKiosco v1.0.0</span>
+                <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                <span class="logo-texto">AdminisGo v1.0.0</span>
             </div>
             <nav class="nav-principal">
                 <a href="registro.html" class="btn btn-outline btn-pequeno">Registrarse</a>
@@ -89,7 +90,7 @@
     <section id="beneficios" class="beneficios">
         <div class="contenedor">
             <h2 class="seccion-titulo texto-centro">
-                ¿Por qué elegir GestiónKiosco?
+                ¿Por qué elegir AdminisGo?
             </h2>
             <p class="seccion-descripcion texto-centro">
                 Diseñado especialmente para comerciantes que necesitan una solución práctica y confiable.
@@ -163,7 +164,7 @@
     <section id="pwa-install-section" class="pwa-install">
         <div class="contenedor">
             <h2 class="seccion-titulo texto-centro">
-                📱 Descargá GestiónKiosco como App
+                📱 Descargá AdminisGo como App
             </h2>
             <p class="seccion-descripcion texto-centro">
                 Instalá el sistema en tu dispositivo y usalo sin depender del navegador. 
@@ -232,14 +233,14 @@
     <footer class="footer">
         <div class="contenedor footer-contenido">
             <div class="footer-logo">
-                <span class="logo-icono">🏪</span>
-                <span class="logo-texto">GestiónKiosco v1.0.0</span>
+                <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                <span class="logo-texto">AdminisGo v1.0.0</span>
             </div>
             <p class="footer-texto">
                 Sistema de gestión pensado para kioscos y pequeños comercios.
             </p>
             <p class="footer-copy">
-                © 2025 GestiónKiosco v1.0.0 • Todos los derechos reservados.
+                © 2025 AdminisGo v1.0.0 • Todos los derechos reservados.
             </p>
         </div>
     </footer>
@@ -259,7 +260,7 @@
     <div id="pwa-instructions-modal" class="pwa-modal" style="display: none;" onclick="if(event.target.id === 'pwa-instructions-modal') cerrarInstrucciones()">
         <div class="pwa-modal-contenido" onclick="event.stopPropagation()">
             <button class="pwa-modal-cerrar" onclick="cerrarInstrucciones()">×</button>
-            <h2>📱 Cómo Instalar GestiónKiosco</h2>
+            <h2>📱 Cómo Instalar AdminisGo</h2>
             
             <!-- Instrucciones Android -->
             <div id="instructions-android" style="display: none;">

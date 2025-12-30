@@ -1,43 +1,43 @@
 /* ============================================
-   SERVICE WORKER - GESTIÓNKIOSCO PWA
+   SERVICE WORKER - ADMINISGO PWA
    ============================================
    Service Worker para cache offline y 
    funcionamiento como Progressive Web App
 ============================================ */
 
-const CACHE_NAME = 'gestion-kiosco-v1.0.0';
-const RUNTIME_CACHE = 'gestion-kiosco-runtime-v1.0.0';
+const CACHE_NAME = 'adminisgo-v1.0.0';
+const RUNTIME_CACHE = 'adminisgo-runtime-v1.0.0';
 
 // Archivos estáticos que se cachean al instalar
-// Nota: En GitHub Pages, las rutas son relativas al repositorio
+// Nota: Rutas relativas (funcionan en dominio personalizado)
 const STATIC_CACHE_URLS = [
-    '/sistema_kioscos/',
-    '/sistema_kioscos/index.html',
-    '/sistema_kioscos/login.html',
-    '/sistema_kioscos/registro.html',
-    '/sistema_kioscos/inicio.html',
-    '/sistema_kioscos/mantenimiento.html',
-    '/sistema_kioscos/configuracion.html',
-    '/sistema_kioscos/css/global.css',
-    '/sistema_kioscos/css/landing.css',
-    '/sistema_kioscos/css/login.css',
-    '/sistema_kioscos/css/registro.css',
-    '/sistema_kioscos/css/inicio.css',
-    '/sistema_kioscos/css/mantenimiento.css',
-    '/sistema_kioscos/css/configuracion.css',
-    '/sistema_kioscos/js/config.js',
-    '/sistema_kioscos/js/supabase.js',
-    '/sistema_kioscos/js/indexeddb.js',
-    '/sistema_kioscos/js/landing.js',
-    '/sistema_kioscos/js/login.js',
-    '/sistema_kioscos/js/registro.js',
-    '/sistema_kioscos/js/inicio.js',
-    '/sistema_kioscos/js/mantenimiento.js',
-    '/sistema_kioscos/js/configuracion.js',
-    '/sistema_kioscos/js/sync.js',
-    '/sistema_kioscos/js/pwa-install.js',
-    '/sistema_kioscos/manifest.json',
-    '/sistema_kioscos/service-worker.js'
+    '/',
+    '/index.html',
+    '/login.html',
+    '/registro.html',
+    '/inicio.html',
+    '/mantenimiento.html',
+    '/configuracion.html',
+    '/css/global.css',
+    '/css/landing.css',
+    '/css/login.css',
+    '/css/registro.css',
+    '/css/inicio.css',
+    '/css/mantenimiento.css',
+    '/css/configuracion.css',
+    '/js/config.js',
+    '/js/supabase.js',
+    '/js/indexeddb.js',
+    '/js/landing.js',
+    '/js/login.js',
+    '/js/registro.js',
+    '/js/inicio.js',
+    '/js/mantenimiento.js',
+    '/js/configuracion.js',
+    '/js/sync.js',
+    '/js/pwa-install.js',
+    '/manifest.json',
+    '/service-worker.js'
 ];
 
 // Estrategia: Cache First para recursos estáticos

@@ -1,5 +1,5 @@
 /* ============================================
-   SISTEMA GESTIÓN KIOSCOS - CONFIGURACIÓN
+   ADMINISGO - CONFIGURACIÓN
    ============================================
    Archivo de configuración global del sistema.
    Contiene constantes, rutas y utilidades comunes.
@@ -12,7 +12,7 @@
  */
 const CONFIG = {
     // Nombre del sistema
-    nombreSistema: "GestiónKiosco",
+    nombreSistema: "AdminisGo",
     
     // Versión actual
     version: "1.0.0",

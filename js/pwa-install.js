@@ -1,5 +1,5 @@
 /* ============================================
-   PWA INSTALL - GESTIÓNKIOSCO
+   PWA INSTALL - ADMINISGO
    ============================================
    Maneja la instalación de la PWA en diferentes
    dispositivos (Android, iOS, Windows)
@@ -186,10 +186,10 @@ function mostrarMensaje(texto, tipo = 'info') {
 async function registrarServiceWorker() {
     if ('serviceWorker' in navigator) {
         try {
-            // Ruta relativa para GitHub Pages
-            const swPath = '/sistema_kioscos/service-worker.js';
+            // Ruta relativa (funciona en dominio personalizado)
+            const swPath = '/service-worker.js';
             const registration = await navigator.serviceWorker.register(swPath, {
-                scope: '/sistema_kioscos/'
+                scope: '/'
             });
             console.log('✅ Service Worker registrado:', registration.scope);
             
