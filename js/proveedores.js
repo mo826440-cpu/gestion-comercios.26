@@ -184,6 +184,13 @@ async function cargarProveedores() {
             return;
         }
         
+        // Verificar que la tabla proveedores existe
+        if (!db.proveedores) {
+            console.error('❌ La tabla proveedores no existe en IndexedDB. Versión de BD:', db.verno);
+            mostrarNotificacion('Error: La base de datos necesita actualizarse. Por favor, recargá la página (F5) o limpiá el caché del navegador.', 'error');
+            return;
+        }
+        
         const sesion = await obtenerSesionLocal();
         if (!sesion || !sesion.comercio_id) {
             mostrarNotificacion('Error: No hay sesión activa', 'error');
@@ -467,6 +474,13 @@ async function manejarGuardar(e) {
         const db = getDB();
         if (!db) {
             throw new Error('Base de datos no disponible');
+        }
+        
+        // Verificar que la tabla proveedores existe
+        if (!db.proveedores) {
+            console.error('❌ La tabla proveedores no existe en IndexedDB');
+            mostrarNotificacion('Error: La base de datos necesita actualizarse. Por favor, recargá la página (F5) o limpiá el caché del navegador.', 'error');
+            return;
         }
         
         const sesion = await obtenerSesionLocal();
