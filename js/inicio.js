@@ -171,6 +171,13 @@ function inicializarAccesosRapidos() {
     accesos.forEach(acceso => {
         acceso.addEventListener('click', function() {
             const modulo = this.dataset.modulo;
+            
+            // Si es referencias, navegar a la pantalla de referencias
+            if (modulo === 'referencias') {
+                window.location.href = 'referencias.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         
@@ -182,6 +189,13 @@ function inicializarAccesosRapidos() {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 const modulo = this.dataset.modulo;
+                
+                // Si es referencias, navegar a la pantalla de referencias
+                if (modulo === 'referencias') {
+                    window.location.href = 'referencias.html';
+                    return;
+                }
+                
                 mostrarMensajeModulo(modulo);
             }
         });
