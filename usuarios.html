@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestión de Usuarios - AdminisGo">
+    <title>Usuarios - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE USUARIOS
+         Gestión de usuarios del comercio
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="inicio.html" class="btn-volver" title="Volver al inicio">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Usuarios</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Indicadores -->
+            <section class="indicadores">
+                <div class="indicador-card">
+                    <div class="indicador-icono indicador-icono-usuarios">
+                        👥
+                    </div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Total de Usuarios</span>
+                        <span class="indicador-valor" id="totalUsuarios">0</span>
+                    </div>
+                </div>
+                
+                <div class="indicador-card">
+                    <div class="indicador-icono indicador-icono-activos">
+                        ✅
+                    </div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Usuarios Activos</span>
+                        <span class="indicador-valor" id="usuariosActivos">0</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Botón de nueva usuario -->
+            <section class="acciones">
+                <button class="btn btn-primario btn-grande" id="btnNuevoUsuario">
+                    <span class="btn-icono">➕</span>
+                    <span>Cargar nuevo usuario</span>
+                </button>
+            </section>
+            
+            <!-- Panel de carga/edición -->
+            <section class="panel-formulario" id="panelFormulario" style="display: none;">
+                <div class="panel-header">
+                    <h3 class="panel-titulo" id="panelTitulo">Cargar nuevo usuario</h3>
+                    <button class="btn-cerrar-panel" id="btnCerrarPanel" title="Cerrar">
+                        <span>✕</span>
+                    </button>
+                </div>
+                
+                <form id="formUsuario" class="form">
+                    <!-- Nombre -->
+                    <div class="form-grupo">
+                        <label for="nombre" class="form-label form-label-requerido">
+                            Nombre completo
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nombre" 
+                            name="nombre" 
+                            class="form-input"
+                            placeholder="Ej: Juan Pérez"
+                            required
+                        >
+                        <span class="form-error" id="errorNombre"></span>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="form-grupo">
+                        <label for="email" class="form-label form-label-requerido">
+                            Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input"
+                            placeholder="usuario@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                        <span class="form-error" id="errorEmail"></span>
+                    </div>
+                    
+                    <!-- Contraseña (solo para nuevos usuarios) -->
+                    <div class="form-grupo" id="grupoPassword">
+                        <label for="password" class="form-label form-label-requerido">
+                            Contraseña
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            placeholder="Mínimo 6 caracteres"
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+                        <span class="form-ayuda">Mínimo 6 caracteres. Solo para nuevos usuarios.</span>
+                        <span class="form-error" id="errorPassword"></span>
+                    </div>
+                    
+                    <!-- Rol -->
+                    <div class="form-grupo">
+                        <label for="rol" class="form-label form-label-requerido">
+                            Rol
+                        </label>
+                        <select 
+                            id="rol" 
+                            name="rol" 
+                            class="form-select"
+                            required
+                        >
+                            <option value="">Seleccionar rol...</option>
+                        </select>
+                        <span class="form-error" id="errorRol"></span>
+                    </div>
+                    
+                    <!-- Estado -->
+                    <div class="form-grupo">
+                        <label class="form-checkbox-label">
+                            <input 
+                                type="checkbox" 
+                                id="activo" 
+                                name="activo" 
+                                class="form-checkbox"
+                                checked
+                            >
+                            <span>Usuario activo</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="form-acciones">
+                        <button type="submit" class="btn btn-primario" id="btnGuardar">
+                            <span class="btn-icono">💾</span>
+                            <span>Guardar</span>
+                        </button>
+                        <button type="button" class="btn btn-secundario" id="btnCancelar">
+                            <span>Cancelar</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <!-- Tabla de usuarios -->
+            <section class="tabla-seccion">
+                <!-- Filtros -->
+                <div class="tabla-filtros">
+                    <div class="filtro-grupo">
+                        <label for="filtroNombre" class="filtro-label">Buscar por nombre:</label>
+                        <div class="filtro-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="filtroNombre" 
+                                class="filtro-input"
+                                placeholder="Escribí para buscar..."
+                            >
+                            <span class="filtro-icono">🔍</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <label for="filtroRol" class="filtro-label">Filtrar por rol:</label>
+                        <select id="filtroRol" class="filtro-select">
+                            <option value="">Todos los roles</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <label for="filtroEstado" class="filtro-label">Filtrar por estado:</label>
+                        <select id="filtroEstado" class="filtro-select">
+                            <option value="">Todos</option>
+                            <option value="activo">Activos</option>
+                            <option value="inactivo">Inactivos</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Tabla -->
+                <div class="tabla-container">
+                    <table class="tabla" id="tablaUsuarios">
+                        <thead>
+                            <tr>
+                                <th class="col-id">Id</th>
+                                <th class="col-nombre">
+                                    <div class="th-content">
+                                        <span>Nombre</span>
+                                        <button class="th-filter" data-col="nombre" title="Filtrar">
+                                            <span>🔽</span>
+                                        </button>
+                                    </div>
+                                </th>
+                                <th class="col-email">Email</th>
+                                <th class="col-rol">Rol</th>
+                                <th class="col-estado">Estado</th>
+                                <th class="col-fecha">Fecha de registro</th>
+                                <th class="col-responsable">Responsable</th>
+                                <th class="col-acciones">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaUsuariosBody">
+                            <tr>
+                                <td colspan="8" class="tabla-vacia">
+                                    <span>Cargando usuarios...</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="paginacion">
+                    <div class="paginacion-info">
+                        <span>Mostrar:</span>
+                        <select id="registrosPorPagina" class="paginacion-select">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span>registros por página</span>
+                    </div>
+                    
+                    <div class="paginacion-controles">
+                        <button class="btn btn-sm btn-secundario" id="btnAnterior" disabled>
+                            <span>←</span>
+                            <span>Anterior</span>
+                        </button>
+                        <span class="paginacion-info-pagina">
+                            Página <span id="paginaActual">1</span> de <span id="totalPaginas">1</span>
+                        </span>
+                        <button class="btn btn-sm btn-secundario" id="btnSiguiente" disabled>
+                            <span>Siguiente</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/usuarios.js"></script>
+</body>
+</html>
+

@@ -144,9 +144,29 @@ function mostrarMensajeSubventana(subventana) {
         productos: 'Productos'
     };
     
-    // Si es categorías, navegar directamente
+    // Si es categorías o marcas, navegar directamente
     if (subventana === 'categorias') {
         window.location.href = 'categorias.html';
+        return;
+    }
+    
+    if (subventana === 'marcas') {
+        window.location.href = 'marcas.html';
+        return;
+    }
+    
+    if (subventana === 'proveedores') {
+        window.location.href = 'proveedores.html';
+        return;
+    }
+    
+    if (subventana === 'clientes') {
+        window.location.href = 'clientes.html';
+        return;
+    }
+    
+    if (subventana === 'productos') {
+        window.location.href = 'productos.html';
         return;
     }
     

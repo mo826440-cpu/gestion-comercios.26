@@ -29,12 +29,17 @@ const SYNC_CONFIG = {
         'configuraciones', // Configuraciones del comercio (tema, preferencias, etc.)
         'categorias',
         'marcas',
+        'proveedores',
         'productos',
         'clientes',
         'stock',
+        'compras',
+        'detalle_compras',
+        'pagos_compras',
         'cajas',
         'ventas',
         'detalle_ventas',
+        'pagos_ventas',
         'movimientos_stock'
     ],
     
@@ -235,7 +240,7 @@ async function descargarCambiosRemotos() {
     }
     
     // Descargar datos del comercio
-    for (const tabla of ['configuraciones', 'categorias', 'marcas', 'productos', 'clientes']) {
+    for (const tabla of ['configuraciones', 'categorias', 'marcas', 'proveedores', 'productos', 'clientes', 'compras', 'detalle_compras', 'pagos_compras', 'ventas', 'detalle_ventas', 'pagos_ventas']) {
         try {
             const datos = await obtenerRegistros(tabla, { comercio_id: sesion.comercio_id });
             await sincronizarTablaLocal(tabla, datos);

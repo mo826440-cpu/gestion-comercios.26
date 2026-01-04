@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard - AdminisGo">
+    <title>Dashboard - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE DASHBOARD
+         Resumen y estadísticas del negocio
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="inicio.html" class="btn-volver" title="Volver al inicio">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Título y filtro global -->
+            <section class="dashboard-header">
+                <h1 class="dashboard-titulo">Dashboard</h1>
+                <div class="filtro-global">
+                    <label for="filtroFechaGlobal" class="filtro-label">Filtro de fecha global:</label>
+                    <select id="filtroFechaGlobal" class="filtro-select">
+                        <option value="hoy">Hoy</option>
+                        <option value="semana">Esta semana</option>
+                        <option value="mes" selected>Este mes</option>
+                        <option value="trimestre">Este trimestre</option>
+                        <option value="año">Este año</option>
+                        <option value="personalizado">Personalizado</option>
+                    </select>
+                    <div id="filtroPersonalizado" class="filtro-fechas" style="display: none;">
+                        <input type="date" id="fechaDesde" class="filtro-input-fecha">
+                        <span class="filtro-separador">hasta</span>
+                        <input type="date" id="fechaHasta" class="filtro-input-fecha">
+                        <button class="btn btn-primario btn-sm" id="btnAplicarFiltro">Aplicar</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Grid de gráficos -->
+            <section class="graficos-grid">
+                <!-- Gráfico 1: Clientes con deudas (barras horizontales) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Clientes con Deudas</h3>
+                        <div class="grafico-filtro">
+                            <input type="date" id="filtroFechaClientes" class="filtro-fecha-individual">
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoClientesDeudas"></canvas>
+                    </div>
+                </article>
+                
+                <!-- Gráfico 2: Ventas (barras verticales) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Ventas</h3>
+                        <div class="grafico-filtro">
+                            <input type="date" id="filtroFechaVentas" class="filtro-fecha-individual">
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoVentas"></canvas>
+                    </div>
+                </article>
+                
+                <!-- Gráfico 3: Productos más vendidos (torta) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Productos Más Vendidos</h3>
+                        <div class="grafico-controls">
+                            <div class="grafico-filtro">
+                                <input type="date" id="filtroFechaProductos" class="filtro-fecha-individual">
+                            </div>
+                            <div class="grafico-cantidad">
+                                <label for="cantidadProductos" class="control-label-sm">Cantidad:</label>
+                                <select id="cantidadProductos" class="control-select-sm">
+                                    <option value="5" selected>5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoProductosVendidos"></canvas>
+                    </div>
+                </article>
+                
+                <!-- Gráfico 4: Proveedores que les debo (barras horizontales) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Proveedores que les Debo</h3>
+                        <div class="grafico-filtro">
+                            <input type="date" id="filtroFechaProveedores" class="filtro-fecha-individual">
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoProveedoresDeuda"></canvas>
+                    </div>
+                </article>
+                
+                <!-- Gráfico 5: Formas de pago (torta) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Formas de Pago</h3>
+                        <div class="grafico-filtro">
+                            <input type="date" id="filtroFechaFormasPago" class="filtro-fecha-individual">
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoFormasPago"></canvas>
+                    </div>
+                </article>
+                
+                <!-- Gráfico 6: Ventas por Usuario (torta) -->
+                <article class="grafico-card">
+                    <div class="grafico-header">
+                        <h3 class="grafico-titulo">Ventas por Usuario</h3>
+                        <div class="grafico-filtro">
+                            <input type="date" id="filtroFechaUsuarios" class="filtro-fecha-individual">
+                        </div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoVentasUsuarios"></canvas>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
+

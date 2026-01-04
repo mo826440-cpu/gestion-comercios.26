@@ -178,6 +178,30 @@ function inicializarAccesosRapidos() {
                 return;
             }
             
+            // Si es compras, navegar a la pantalla de compras
+            if (modulo === 'compras') {
+                window.location.href = 'compras.html';
+                return;
+            }
+            
+            // Si es ventas, navegar a la pantalla de ventas
+            if (modulo === 'ventas') {
+                window.location.href = 'ventas.html';
+                return;
+            }
+            
+            // Si es dashboard, navegar a la pantalla de dashboard
+            if (modulo === 'dashboard') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            // Si es usuarios, navegar a la pantalla de usuarios
+            if (modulo === 'usuarios') {
+                window.location.href = 'usuarios.html';
+                return;
+            }
+            
             mostrarMensajeModulo(modulo);
         });
         

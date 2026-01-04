@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ventas - AdminisGo">
+    <title>Ventas - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/ventas.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE VENTAS
+         Gestión de ventas a clientes
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="inicio.html" class="btn-volver" title="Volver al inicio">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Ventas</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Indicadores superiores -->
+            <section class="indicadores-section">
+                <div class="indicador-card">
+                    <div class="indicador-icono">💰</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Ventas del mes</span>
+                        <span class="indicador-valor" id="totalVentasMes">0</span>
+                    </div>
+                </div>
+                <div class="indicador-card indicador-monto">
+                    <div class="indicador-icono indicador-icono-monto">💵</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Monto total del mes</span>
+                        <span class="indicador-valor" id="montoTotalMes">$0,00</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Botón cargar nueva venta -->
+            <section class="acciones-section">
+                <button class="btn btn-primario btn-grande" id="btnNuevaVenta">
+                    <span class="btn-icono">➕</span>
+                    Cargar nueva venta
+                    <span class="btn-shortcut">(F2)</span>
+                </button>
+            </section>
+            
+            <!-- Panel de carga (oculto por defecto) -->
+            <section class="panel-carga" id="panelCarga" style="display: none;">
+                <div class="panel-carga-contenido">
+                    <h3 class="panel-titulo">Nueva Venta</h3>
+                    
+                    <form id="formVenta" class="form-venta">
+                        <!-- Datos básicos -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="facturacion" class="form-label">
+                                    Facturación
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="facturacion" 
+                                    class="form-input" 
+                                    placeholder="No Aplica"
+                                    value="No Aplica"
+                                    autocomplete="off"
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clienteVenta" class="form-label">
+                                    Cliente
+                                </label>
+                                <select id="clienteVenta" class="form-select form-select-busqueda">
+                                    <option value="">No Aplica</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Sección de productos -->
+                        <div class="seccion-productos">
+                            <div class="seccion-header">
+                                <h4 class="seccion-titulo">Productos</h4>
+                                <button type="button" class="btn btn-secundario btn-sm" id="btnAgregarProducto">
+                                    <span class="btn-icono">➕</span>
+                                    Agregar producto
+                                </button>
+                            </div>
+                            
+                            <!-- Formulario para agregar producto (oculto inicialmente) -->
+                            <div class="form-agregar-producto" id="formAgregarProducto" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="codigoBarraProducto" class="form-label">
+                                            Código de barras <span class="obligatorio">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="codigoBarraProducto" 
+                                            class="form-input" 
+                                            placeholder="Escanear o ingresar código"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                    
+                                    <div class="form-group form-group-full">
+                                        <label for="nombreProductoVenta" class="form-label">
+                                            Nombre del producto <span class="obligatorio">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="nombreProductoVenta" 
+                                            class="form-input form-input-busqueda" 
+                                            placeholder="Buscar o ingresar nombre"
+                                            autocomplete="off"
+                                        >
+                                        <div class="sugerencias-productos" id="sugerenciasProductos" style="display: none;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cantidadProducto" class="form-label">
+                                            Cantidad <span class="obligatorio">*</span>
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            id="cantidadProducto" 
+                                            class="form-input" 
+                                            placeholder="0"
+                                            step="0.01"
+                                            min="0"
+                                            autocomplete="off"
+                                        >
+                                        <small class="form-hint" id="stockDisponible" style="display: none;"></small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="precioProducto" class="form-label">
+                                            Precio <span class="obligatorio">*</span>
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            id="precioProducto" 
+                                            class="form-input" 
+                                            placeholder="0,00"
+                                            step="0.01"
+                                            min="0"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="descuentoProducto" class="form-label">
+                                            Descuento (%)
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            id="descuentoProducto" 
+                                            class="form-input" 
+                                            placeholder="0"
+                                            step="0.01"
+                                            min="0"
+                                            max="100"
+                                            value="0"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </div>
+                                
+                                <div class="form-acciones-inline">
+                                    <button type="button" class="btn btn-outline btn-sm" id="btnCancelarProducto">
+                                        Cancelar
+                                    </button>
+                                    <button type="button" class="btn btn-primario btn-sm" id="btnGuardarProducto">
+                                        Agregar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabla de productos agregados -->
+                            <div class="tabla-productos-container">
+                                <table class="tabla-productos" id="tablaProductosVenta">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio unit.</th>
+                                            <th>Descuento</th>
+                                            <th>Subtotal</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyProductosVenta">
+                                        <tr class="tabla-vacia">
+                                            <td colspan="7" style="text-align: center; padding: var(--espaciado-lg); color: var(--color-texto-secundario);">
+                                                No hay productos agregados
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5" style="text-align: right; font-weight: 700;">Total:</td>
+                                            <td id="totalProductos" style="font-weight: 700; font-size: var(--tamano-lg);">$0,00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Sección de pagos -->
+                        <div class="seccion-pagos">
+                            <div class="seccion-header">
+                                <h4 class="seccion-titulo">Pagos</h4>
+                                <button type="button" class="btn btn-secundario btn-sm" id="btnAgregarPago">
+                                    <span class="btn-icono">➕</span>
+                                    Agregar pago
+                                </button>
+                            </div>
+                            
+                            <!-- Formulario para agregar pago (oculto inicialmente) -->
+                            <div class="form-agregar-pago" id="formAgregarPago" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="formaPago" class="form-label">
+                                            Forma de pago <span class="obligatorio">*</span>
+                                        </label>
+                                        <select id="formaPago" class="form-select">
+                                            <option value="efectivo" selected>Efectivo</option>
+                                            <option value="transferencia">Transferencia</option>
+                                            <option value="QR">QR</option>
+                                            <option value="debito">Débito</option>
+                                            <option value="credito">Crédito</option>
+                                            <option value="cheque">Cheque</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="montoPago" class="form-label">
+                                            Monto a pagar <span class="obligatorio">*</span>
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            id="montoPago" 
+                                            class="form-input" 
+                                            placeholder="0,00"
+                                            step="0.01"
+                                            min="0"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </div>
+                                
+                                <div class="form-acciones-inline">
+                                    <button type="button" class="btn btn-outline btn-sm" id="btnCancelarPago">
+                                        Cancelar
+                                    </button>
+                                    <button type="button" class="btn btn-primario btn-sm" id="btnGuardarPago">
+                                        Agregar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabla de pagos agregados -->
+                            <div class="tabla-pagos-container">
+                                <table class="tabla-pagos" id="tablaPagosVenta">
+                                    <thead>
+                                        <tr>
+                                            <th>Forma de pago</th>
+                                            <th>Monto</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPagosVenta">
+                                        <tr class="tabla-vacia">
+                                            <td colspan="3" style="text-align: center; padding: var(--espaciado-lg); color: var(--color-texto-secundario);">
+                                                No hay pagos agregados
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td style="text-align: right; font-weight: 700;">Total pagado:</td>
+                                            <td id="totalPagado" style="font-weight: 700; font-size: var(--tamano-lg);">$0,00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; font-weight: 700; color: var(--color-advertencia);">Deuda pendiente:</td>
+                                            <td id="deudaPendiente" style="font-weight: 700; font-size: var(--tamano-lg); color: var(--color-advertencia);">$0,00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="form-acciones">
+                            <button type="button" class="btn btn-outline" id="btnCancelarVenta">
+                                Cancelar venta
+                            </button>
+                            <button type="submit" class="btn btn-primario" id="btnFinalizarVenta" disabled>
+                                Finalizar venta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- Tabla de ventas -->
+            <section class="tabla-section">
+                <div class="tabla-header">
+                    <h3 class="tabla-titulo">Listado de Ventas</h3>
+                    <div class="tabla-controls">
+                        <label for="registrosPorPagina" class="control-label">
+                            Registros por página:
+                        </label>
+                        <select id="registrosPorPagina" class="control-select">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tabla-container">
+                    <table class="tabla-datos" id="tablaVentas">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>
+                                    <div class="th-filter">
+                                        <span>Facturación</span>
+                                        <input 
+                                            type="text" 
+                                            class="filter-input" 
+                                            id="filterFacturacion"
+                                            placeholder="Filtrar..."
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-filter">
+                                        <span>Cliente</span>
+                                        <input 
+                                            type="text" 
+                                            class="filter-input" 
+                                            id="filterCliente"
+                                            placeholder="Filtrar..."
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </th>
+                                <th>Cantidad productos</th>
+                                <th>Monto total</th>
+                                <th>Monto pagado</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyVentas">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="paginacion" id="paginacion">
+                    <!-- Se genera dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Modal Ver Detalle Venta -->
+    <div class="modal" id="modalDetalleVenta" style="display: none;">
+        <div class="modal-contenido modal-grande">
+            <div class="modal-header">
+                <h3 class="modal-titulo">Detalle de Venta</h3>
+                <button class="modal-cerrar" onclick="cerrarModalDetalle()">×</button>
+            </div>
+            <div class="modal-body" id="modalDetalleVentaBody">
+                <!-- Contenido se carga dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="cerrarModalDetalle()">Cerrar</button>
+                <button class="btn btn-primario" id="btnImprimirDetalle" onclick="imprimirDetalleVenta()">Imprimir</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/ventas.js"></script>
+</body>
+</html>
+

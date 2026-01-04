@@ -14,7 +14,7 @@
 // ============================================
 
 const DB_NAME = 'GestionKioscosDB';
-const DB_VERSION = 4; // Incrementado para agregar campos a categorias y marcas (especificaciones, created_at, responsable_nombre)
+const DB_VERSION = 10; // Incrementado para agregar campos a usuarios (activo, responsable_nombre, created_at, updated_at)
 
 // Variable global para la base de datos
 let db = null;
@@ -179,6 +179,299 @@ async function initIndexedDB() {
             console.log('✅ Migración a versión 4 completada');
         });
         
+        // Versión 5: Agregar tabla proveedores
+        db.version(5).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, codigo_barra, precio_venta, activo, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        });
+        
+        // Versión 6: Agregar campos a clientes (saldo_pendiente, especificaciones, responsable_nombre, telefono, email, direccion)
+        db.version(6).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, codigo_barra, precio_venta, activo, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        }).upgrade(async (trans) => {
+            console.log('🔄 Migrando a versión 6: Agregando campos a clientes...');
+            
+            // Actualizar clientes existentes
+            const clientes = await trans.table('clientes').toCollection().toArray();
+            for (const cliente of clientes) {
+                const actualizaciones = {};
+                
+                // Agregar created_at si no existe (usar updated_at como fallback)
+                if (!cliente.created_at) {
+                    actualizaciones.created_at = cliente.updated_at || new Date().toISOString();
+                }
+                
+                // Agregar saldo_pendiente si no existe (0 por defecto)
+                if (cliente.saldo_pendiente === undefined) {
+                    actualizaciones.saldo_pendiente = 0;
+                }
+                
+                // Agregar especificaciones si no existe (null por defecto)
+                if (cliente.especificaciones === undefined) {
+                    actualizaciones.especificaciones = null;
+                }
+                
+                // Agregar responsable_nombre si no existe (null por defecto)
+                if (cliente.responsable_nombre === undefined) {
+                    actualizaciones.responsable_nombre = null;
+                }
+                
+                // Agregar telefono, email, direccion si no existen
+                if (cliente.telefono === undefined) {
+                    actualizaciones.telefono = null;
+                }
+                if (cliente.email === undefined) {
+                    actualizaciones.email = null;
+                }
+                if (cliente.direccion === undefined) {
+                    actualizaciones.direccion = null;
+                }
+                
+                if (Object.keys(actualizaciones).length > 0) {
+                    await trans.table('clientes').update(cliente.id, actualizaciones);
+                }
+            }
+            
+            console.log('✅ Migración a versión 6 completada');
+        });
+        
+        // Versión 7: Agregar campos a productos (especificaciones, responsable_nombre, precio_costo, descripcion, categoria_id, marca_id)
+        db.version(7).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        }).upgrade(async (trans) => {
+            console.log('🔄 Migrando a versión 7: Agregando campos a productos...');
+            
+            // Actualizar productos existentes
+            const productos = await trans.table('productos').toCollection().toArray();
+            for (const producto of productos) {
+                const actualizaciones = {};
+                
+                // Agregar created_at si no existe (usar updated_at como fallback)
+                if (!producto.created_at) {
+                    actualizaciones.created_at = producto.updated_at || new Date().toISOString();
+                }
+                
+                // Agregar precio_costo si no existe (0 por defecto)
+                if (producto.precio_costo === undefined) {
+                    actualizaciones.precio_costo = 0;
+                }
+                
+                // Agregar descripcion si no existe (null por defecto)
+                if (producto.descripcion === undefined) {
+                    actualizaciones.descripcion = null;
+                }
+                
+                // Agregar categoria_id si no existe (null por defecto)
+                if (producto.categoria_id === undefined) {
+                    actualizaciones.categoria_id = null;
+                }
+                
+                // Agregar marca_id si no existe (null por defecto)
+                if (producto.marca_id === undefined) {
+                    actualizaciones.marca_id = null;
+                }
+                
+                // Agregar especificaciones si no existe (null por defecto)
+                if (producto.especificaciones === undefined) {
+                    actualizaciones.especificaciones = null;
+                }
+                
+                // Agregar responsable_nombre si no existe (null por defecto)
+                if (producto.responsable_nombre === undefined) {
+                    actualizaciones.responsable_nombre = null;
+                }
+                
+                if (Object.keys(actualizaciones).length > 0) {
+                    await trans.table('productos').update(producto.id, actualizaciones);
+                }
+            }
+            
+            console.log('✅ Migración a versión 7 completada');
+        });
+        
+        // Versión 8: Agregar tablas compras, detalle_compras y pagos_compras
+        db.version(8).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            compras: 'id, comercio_id, proveedor_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_compras: 'id, compra_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, sync_id, created_at',
+            pagos_compras: 'id, compra_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        });
+        
+        // Versión 9: Actualizar tablas ventas y agregar pagos_ventas
+        db.version(9).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            compras: 'id, comercio_id, proveedor_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_compras: 'id, compra_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, sync_id, created_at',
+            pagos_compras: 'id, compra_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, fecha, total, sync_id, synced',
+            detalle_ventas: 'id, venta_id, producto_id, sync_id, synced',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        });
+        
+        // Versión 9: Actualizar tablas ventas y agregar pagos_ventas
+        db.version(9).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            compras: 'id, comercio_id, proveedor_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_compras: 'id, compra_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, sync_id, created_at',
+            pagos_compras: 'id, compra_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, cliente_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_ventas: 'id, venta_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, descuento, sync_id, created_at',
+            pagos_ventas: 'id, venta_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        }).upgrade(async tx => {
+            // Migración para agregar campos a usuarios (versión 9)
+            await tx.usuario.toCollection().modify(usuario => {
+                if (usuario.activo === undefined) usuario.activo = true;
+                if (usuario.responsable_nombre === undefined) usuario.responsable_nombre = null;
+                if (usuario.created_at === undefined) usuario.created_at = new Date().toISOString();
+                if (usuario.updated_at === undefined) usuario.updated_at = new Date().toISOString();
+            });
+        });
+        
+        // Versión 10: Agregar campos adicionales a usuarios (activo, responsable_nombre, created_at, updated_at)
+        db.version(10).stores({
+            sync_queue: '++id, tabla, registro_id, operacion, created_at, intentos',
+            sync_status: 'tabla, ultima_sync, registros_pendientes',
+            sesion: 'id, usuario_id, comercio_id, rol_id, email, activo',
+            config: 'clave, valor',
+            comercio: 'id, razon_social, email, sync_id, updated_at',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, activo, responsable_nombre, created_at, updated_at, sync_id',
+            roles: 'id, nombre, sync_id',
+            permisos: 'id, codigo, modulo, sync_id',
+            roles_permisos: '[rol_id+permiso_id]',
+            categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
+            configuraciones: 'id, comercio_id, categoria, clave, [comercio_id+categoria+clave], valor, tipo, sync_id, updated_at',
+            compras: 'id, comercio_id, proveedor_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_compras: 'id, compra_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, sync_id, created_at',
+            pagos_compras: 'id, compra_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            cajas: 'id, comercio_id, estado, fecha_apertura, sync_id, synced',
+            ventas: 'id, comercio_id, caja_id, usuario_id, cliente_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_ventas: 'id, venta_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, descuento_porcentaje, descuento_monto, sync_id, created_at',
+            pagos_ventas: 'id, venta_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
+            movimientos_stock: 'id, producto_id, comercio_id, tipo, sync_id, synced'
+        }).upgrade(async tx => {
+            // Migración para agregar campos a usuarios (versión 10)
+            console.log('🔄 Migrando a versión 10: Agregando campos a usuarios...');
+            await tx.usuario.toCollection().modify(usuario => {
+                if (usuario.activo === undefined) usuario.activo = true;
+                if (usuario.responsable_nombre === undefined) usuario.responsable_nombre = null;
+                if (usuario.created_at === undefined) usuario.created_at = new Date().toISOString();
+                if (usuario.updated_at === undefined) usuario.updated_at = new Date().toISOString();
+            });
+        });
+        
         // Definir esquema de la base de datos (versión actual)
         db.version(DB_VERSION).stores({
             // ============================================
@@ -209,7 +502,7 @@ async function initIndexedDB() {
             comercio: 'id, razon_social, email, sync_id, updated_at',
             
             // Usuario actual
-            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, sync_id',
+            usuario: 'id, auth_user_id, comercio_id, rol_id, nombre, email, activo, responsable_nombre, created_at, updated_at, sync_id',
             
             // Roles y permisos (cache)
             roles: 'id, nombre, sync_id',
@@ -219,14 +512,20 @@ async function initIndexedDB() {
             // Catalogos
             categorias: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
             marcas: 'id, comercio_id, nombre, activo, especificaciones, created_at, responsable_nombre, sync_id, updated_at',
-            productos: 'id, comercio_id, nombre, codigo_barra, precio_venta, activo, sync_id, updated_at',
-            clientes: 'id, comercio_id, nombre, documento, sync_id, updated_at',
+            proveedores: 'id, comercio_id, nombre, razon_social, cuit, telefono, email, direccion, contacto_nombre, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            productos: 'id, comercio_id, nombre, descripcion, categoria_id, marca_id, codigo_barra, precio_costo, precio_venta, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
+            clientes: 'id, comercio_id, nombre, documento, telefono, email, direccion, saldo_pendiente, especificaciones, activo, created_at, responsable_nombre, sync_id, updated_at',
             
             // Stock
             stock: 'id, producto_id, comercio_id, cantidad, sync_id, updated_at',
             
             // Configuraciones del comercio
             configuraciones: 'id, comercio_id, categoria, clave, valor, tipo, sync_id, updated_at',
+            
+            // Compras
+            compras: 'id, comercio_id, proveedor_id, facturacion, fecha, subtotal, descuento, total, monto_pagado, monto_deuda, estado, observaciones, responsable_nombre, created_at, sync_id, updated_at',
+            detalle_compras: 'id, compra_id, producto_id, codigo_barra, nombre_producto, cantidad, precio_unitario, subtotal, sync_id, created_at',
+            pagos_compras: 'id, compra_id, forma_pago, monto, fecha_pago, observaciones, sync_id, created_at',
             
             // ============================================
             // OPERACIONES LOCALES

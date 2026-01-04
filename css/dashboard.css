@@ -1,0 +1,273 @@
+/* ============================================
+   DASHBOARD - ESTILOS ESPECÍFICOS
+   ============================================
+   Estilos para la pantalla de Dashboard
+============================================ */
+
+/* ============================================
+   HEADER
+============================================ */
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-md);
+}
+
+.btn-volver {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radio-md);
+    background: var(--color-fondo);
+    border: 2px solid var(--color-borde);
+    color: var(--color-texto);
+    text-decoration: none;
+    transition: all var(--transicion-rapida);
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    background: var(--color-primario);
+    border-color: var(--color-primario);
+    color: white;
+    transform: translateX(-2px);
+}
+
+.icono-volver {
+    line-height: 1;
+}
+
+/* ============================================
+   DASHBOARD HEADER
+============================================ */
+.dashboard-header {
+    margin-bottom: var(--espaciado-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--espaciado-md);
+}
+
+.dashboard-titulo {
+    font-size: var(--tamano-3xl);
+    font-weight: 800;
+    color: var(--color-texto);
+    margin: 0;
+}
+
+.filtro-global {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-md);
+    flex-wrap: wrap;
+}
+
+.filtro-label {
+    font-size: var(--tamano-sm);
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+.filtro-select {
+    padding: var(--espaciado-sm) var(--espaciado-md);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radio-md);
+    font-family: var(--fuente-principal);
+    font-size: var(--tamano-base);
+    color: var(--color-texto);
+    background: var(--color-blanco);
+    cursor: pointer;
+    transition: all var(--transicion-rapida);
+}
+
+.filtro-select:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px var(--color-primario-light);
+}
+
+.filtro-fechas {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-sm);
+}
+
+.filtro-input-fecha {
+    padding: var(--espaciado-sm) var(--espaciado-md);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radio-md);
+    font-family: var(--fuente-principal);
+    font-size: var(--tamano-sm);
+    color: var(--color-texto);
+    background: var(--color-blanco);
+    transition: all var(--transicion-rapida);
+}
+
+.filtro-input-fecha:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px var(--color-primario-light);
+}
+
+.filtro-separador {
+    font-size: var(--tamano-sm);
+    color: var(--color-texto-secundario);
+}
+
+/* ============================================
+   GRID DE GRÁFICOS
+============================================ */
+.graficos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: var(--espaciado-xl);
+    margin-bottom: var(--espaciado-xl);
+}
+
+.grafico-card {
+    background: var(--color-blanco);
+    border-radius: var(--radio-lg);
+    padding: var(--espaciado-xl);
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-borde);
+    display: flex;
+    flex-direction: column;
+}
+
+.grafico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--espaciado-lg);
+    flex-wrap: wrap;
+    gap: var(--espaciado-md);
+}
+
+.grafico-titulo {
+    font-size: var(--tamano-lg);
+    font-weight: 700;
+    color: var(--color-texto);
+    margin: 0;
+}
+
+.grafico-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-md);
+    flex-wrap: wrap;
+}
+
+.grafico-filtro {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-xs);
+}
+
+.filtro-fecha-individual {
+    padding: var(--espaciado-xs) var(--espaciado-sm);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-sm);
+    font-family: var(--fuente-principal);
+    font-size: var(--tamano-xs);
+    color: var(--color-texto);
+    background: var(--color-blanco);
+    transition: all var(--transicion-rapida);
+}
+
+.filtro-fecha-individual:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 2px var(--color-primario-light);
+}
+
+.grafico-cantidad {
+    display: flex;
+    align-items: center;
+    gap: var(--espaciado-xs);
+}
+
+.control-label-sm {
+    font-size: var(--tamano-xs);
+    color: var(--color-texto-secundario);
+    font-weight: 500;
+}
+
+.control-select-sm {
+    padding: var(--espaciado-xs) var(--espaciado-sm);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-sm);
+    font-family: var(--fuente-principal);
+    font-size: var(--tamano-xs);
+    color: var(--color-texto);
+    background: var(--color-blanco);
+    cursor: pointer;
+    transition: all var(--transicion-rapida);
+}
+
+.control-select-sm:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
+
+.grafico-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    flex: 1;
+}
+
+.grafico-container canvas {
+    max-height: 100%;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 1200px) {
+    .graficos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filtro-global {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filtro-fechas {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-input-fecha {
+        width: 100%;
+    }
+    
+    .grafico-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .grafico-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .grafico-container {
+        height: 250px;
+    }
+}
+

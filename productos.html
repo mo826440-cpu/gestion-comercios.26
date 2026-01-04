@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Productos - AdminisGo">
+    <title>Productos - AdminisGo</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/productos.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/IconoAG.png" type="image/png">
+</head>
+<body>
+    <!-- ============================================
+         PANTALLA DE PRODUCTOS
+         Gestión de productos con código de barras, stock, precios
+    ============================================ -->
+    
+    <!-- Header del sistema -->
+    <header class="header-app">
+        <div class="contenedor header-contenido">
+            <!-- Logo y botón volver -->
+            <div class="logo-section">
+                <a href="referencias.html" class="btn-volver" title="Volver a Referencias">
+                    <span class="icono-volver">←</span>
+                </a>
+                <div class="logo">
+                    <img src="assets/icons/IconoAG.png" alt="AdminisGo" class="logo-icono-img" style="width: 32px; height: 32px; margin-right: 8px; vertical-align: middle;">
+                    <span class="logo-texto">Productos</span>
+                </div>
+            </div>
+            
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <span class="usuario-nombre" id="nombreUsuario">Usuario</span>
+                <button class="btn-cerrar-sesion" id="btnCerrarSesion" title="Cerrar sesión">
+                    <span class="icono-salir">🚪</span>
+                    <span class="texto-salir">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="main-app">
+        <div class="contenedor">
+            <!-- Indicadores superiores -->
+            <section class="indicadores-section">
+                <div class="indicador-card">
+                    <div class="indicador-icono">📦</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Productos cargados</span>
+                        <span class="indicador-valor" id="totalProductos">0</span>
+                    </div>
+                </div>
+                <div class="indicador-card">
+                    <div class="indicador-icono indicador-icono-stock">📊</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Stock total</span>
+                        <span class="indicador-valor" id="totalStock">0</span>
+                    </div>
+                </div>
+                <div class="indicador-card indicador-valor">
+                    <div class="indicador-icono indicador-icono-valor">💰</div>
+                    <div class="indicador-info">
+                        <span class="indicador-label">Valor inventario</span>
+                        <span class="indicador-valor" id="valorInventario">$0,00</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Botón cargar nuevo producto -->
+            <section class="acciones-section">
+                <button class="btn btn-primario btn-grande" id="btnNuevoProducto">
+                    <span class="btn-icono">➕</span>
+                    Cargar nuevo producto
+                </button>
+            </section>
+            
+            <!-- Panel de carga (oculto por defecto) -->
+            <section class="panel-carga" id="panelCarga" style="display: none;">
+                <div class="panel-carga-contenido">
+                    <h3 class="panel-titulo">Nuevo Producto</h3>
+                    
+                    <form id="formProducto" class="form-producto">
+                        <div class="form-row">
+                            <div class="form-group form-group-full">
+                                <label for="nombreProducto" class="form-label">
+                                    Nombre <span class="obligatorio">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="nombreProducto" 
+                                    class="form-input" 
+                                    placeholder="Ej: Coca Cola 2.5L"
+                                    required
+                                    autocomplete="off"
+                                >
+                                <span class="form-error" id="errorNombre"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="categoriaProducto" class="form-label">
+                                    Categoría
+                                </label>
+                                <select id="categoriaProducto" class="form-select">
+                                    <option value="">Seleccionar categoría...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="marcaProducto" class="form-label">
+                                    Marca
+                                </label>
+                                <select id="marcaProducto" class="form-select">
+                                    <option value="">Seleccionar marca...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="codigoBarra" class="form-label">
+                                    Código de barras
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="codigoBarra" 
+                                    class="form-input" 
+                                    placeholder="7790310981234"
+                                    autocomplete="off"
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="precioVenta" class="form-label">
+                                    Precio de venta <span class="obligatorio">*</span>
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="precioVenta" 
+                                    class="form-input" 
+                                    placeholder="0,00"
+                                    step="0.01"
+                                    min="0"
+                                    required
+                                    autocomplete="off"
+                                >
+                                <span class="form-error" id="errorPrecioVenta"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="precioCosto" class="form-label">
+                                    Precio de costo
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="precioCosto" 
+                                    class="form-input" 
+                                    placeholder="0,00"
+                                    step="0.01"
+                                    min="0"
+                                    autocomplete="off"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="descripcionProducto" class="form-label">
+                                Descripción
+                            </label>
+                            <textarea 
+                                id="descripcionProducto" 
+                                class="form-textarea" 
+                                rows="3"
+                                placeholder="Descripción detallada del producto (opcional)"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="especificaciones" class="form-label">
+                                Especificaciones
+                            </label>
+                            <textarea 
+                                id="especificaciones" 
+                                class="form-textarea" 
+                                rows="3"
+                                placeholder="Información adicional sobre el producto (opcional)"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-acciones">
+                            <button type="button" class="btn btn-outline" id="btnCancelar">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primario" id="btnGuardar">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- Tabla de productos -->
+            <section class="tabla-section">
+                <div class="tabla-header">
+                    <h3 class="tabla-titulo">Listado de Productos</h3>
+                    <div class="tabla-controls">
+                        <label for="registrosPorPagina" class="control-label">
+                            Registros por página:
+                        </label>
+                        <select id="registrosPorPagina" class="control-select">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tabla-container">
+                    <table class="tabla-datos" id="tablaProductos">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>
+                                    <div class="th-filter">
+                                        <span>Nombre</span>
+                                        <input 
+                                            type="text" 
+                                            class="filter-input" 
+                                            id="filterNombre"
+                                            placeholder="Filtrar..."
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-filter">
+                                        <span>Código de barras</span>
+                                        <input 
+                                            type="text" 
+                                            class="filter-input" 
+                                            id="filterCodigoBarra"
+                                            placeholder="Filtrar..."
+                                            autocomplete="off"
+                                        >
+                                    </div>
+                                </th>
+                                <th>Categoría</th>
+                                <th>Marca</th>
+                                <th>Precio de venta</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Fecha de registro/modificación</th>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyProductos">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="paginacion" id="paginacion">
+                    <!-- Se genera dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-app">
+        <div class="contenedor footer-contenido">
+            <p class="footer-texto">
+                AdminisGo v1.0.0 • Sistema de gestión para comercios
+            </p>
+        </div>
+    </footer>
+
+    <!-- Librerias externas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- JavaScript del sistema -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/indexeddb.js"></script>
+    <script src="js/sync.js"></script>
+    <script src="js/productos.js"></script>
+</body>
+</html>
+
