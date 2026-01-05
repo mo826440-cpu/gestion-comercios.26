@@ -242,10 +242,35 @@ async function descargarCambiosRemotos() {
     // Descargar datos del comercio
     for (const tabla of ['configuraciones', 'categorias', 'marcas', 'proveedores', 'productos', 'clientes', 'compras', 'detalle_compras', 'pagos_compras', 'ventas', 'detalle_ventas', 'pagos_ventas']) {
         try {
-            const datos = await obtenerRegistros(tabla, { comercio_id: sesion.comercio_id });
+            let datos = [];
+            
+            // Para ventas y compras, manejar ambos nombres de columna (comercio_id o id_comercio)
+            if (tabla === 'ventas' || tabla === 'compras') {
+                try {
+                    // Intentar primero con comercio_id (nombre esperado)
+                    datos = await obtenerRegistros(tabla, { comercio_id: sesion.comercio_id });
+                } catch (error1) {
+                    // Si falla, intentar con id_comercio
+                    try {
+                        datos = await obtenerRegistros(tabla, { id_comercio: sesion.comercio_id });
+                    } catch (error2) {
+                        // Si también falla, obtener todos y filtrar manualmente
+                        const todosDatos = await obtenerRegistros(tabla);
+                        datos = todosDatos.filter(reg => {
+                            const idComercio = reg.comercio_id || reg.id_comercio;
+                            return idComercio === sesion.comercio_id;
+                        });
+                    }
+                }
+            } else {
+                // Para otras tablas, usar comercio_id normalmente
+                datos = await obtenerRegistros(tabla, { comercio_id: sesion.comercio_id });
+            }
+            
             await sincronizarTablaLocal(tabla, datos);
             resultado.descargados += datos?.length || 0;
         } catch (error) {
+            console.error(`Error descargando ${tabla}:`, error);
             resultado.errores.push(`${tabla}: ${error.message}`);
         }
     }
@@ -281,6 +306,36 @@ async function sincronizarTablaRolesPermisos(datosRemotos) {
 }
 
 /**
+ * Normaliza un registro de ventas desde Supabase al formato local
+ * Mapea campos como id_comercio -> comercio_id si es necesario
+ * @param {Object} registro - Registro de Supabase
+ * @returns {Object} Registro normalizado
+ */
+function normalizarRegistroVentas(registro) {
+    const normalizado = { ...registro };
+    
+    // Mapear campos si existen con nombres diferentes
+    if (normalizado.id_comercio !== undefined && normalizado.comercio_id === undefined) {
+        normalizado.comercio_id = normalizado.id_comercio;
+        delete normalizado.id_comercio;
+    }
+    if (normalizado.id_caja !== undefined && normalizado.caja_id === undefined) {
+        normalizado.caja_id = normalizado.id_caja;
+        delete normalizado.id_caja;
+    }
+    if (normalizado.id_usuario !== undefined && normalizado.usuario_id === undefined) {
+        normalizado.usuario_id = normalizado.id_usuario;
+        delete normalizado.id_usuario;
+    }
+    if (normalizado.id_cliente !== undefined && normalizado.cliente_id === undefined) {
+        normalizado.cliente_id = normalizado.id_cliente;
+        delete normalizado.id_cliente;
+    }
+    
+    return normalizado;
+}
+
+/**
  * Sincroniza una tabla local con datos remotos
  * @param {string} tabla - Nombre de la tabla
  * @param {Array} datosRemotos - Datos de Supabase
@@ -290,25 +345,44 @@ async function sincronizarTablaLocal(tabla, datosRemotos) {
     if (!db || !datosRemotos) return;
     
     for (const registro of datosRemotos) {
+        // Normalizar registro si es ventas (mapear campos)
+        let registroNormalizado = registro;
+        if (tabla === 'ventas') {
+            registroNormalizado = normalizarRegistroVentas(registro);
+        }
+        
         // Buscar si existe localmente
-        const local = await db.table(tabla).get(registro.id);
+        const local = await db.table(tabla).get(registroNormalizado.id);
         
         if (!local) {
             // No existe, insertar
             await db.table(tabla).put({
-                ...registro,
-                sync_id: registro.id || registro.sync_id, // Asegurar sync_id
+                ...registroNormalizado,
+                sync_id: registroNormalizado.id || registroNormalizado.sync_id, // Asegurar sync_id
                 synced: true
             });
-        } else if (new Date(registro.updated_at) > new Date(local.updated_at)) {
-            // El remoto es mas nuevo, actualizar
-            await db.table(tabla).put({
-                ...registro,
-                sync_id: registro.id || registro.sync_id, // Asegurar sync_id
-                synced: true
-            });
+        } else {
+            // Verificar si hay updated_at para comparar
+            const fechaRemota = registroNormalizado.updated_at || registroNormalizado.created_at || registroNormalizado.fecha;
+            const fechaLocal = local.updated_at || local.created_at || local.fecha;
+            
+            if (fechaRemota && fechaLocal && new Date(fechaRemota) > new Date(fechaLocal)) {
+                // El remoto es mas nuevo, actualizar
+                await db.table(tabla).put({
+                    ...registroNormalizado,
+                    sync_id: registroNormalizado.id || registroNormalizado.sync_id, // Asegurar sync_id
+                    synced: true
+                });
+            } else if (!fechaRemota || !fechaLocal) {
+                // Si no hay fechas para comparar, actualizar de todas formas
+                await db.table(tabla).put({
+                    ...registroNormalizado,
+                    sync_id: registroNormalizado.id || registroNormalizado.sync_id,
+                    synced: true
+                });
+            }
+            // Si el local es mas nuevo, no hacer nada (se subira en la proxima sync)
         }
-        // Si el local es mas nuevo, no hacer nada (se subira en la proxima sync)
     }
 }
 

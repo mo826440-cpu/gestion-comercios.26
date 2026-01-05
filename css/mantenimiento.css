@@ -996,10 +996,6 @@ body {
     border-color: #3ecf8e;
 }
 
-.enlace-netlify:hover {
-    border-color: #00c7b7;
-}
-
 .enlace-github:hover {
     border-color: var(--mant-text);
 }
