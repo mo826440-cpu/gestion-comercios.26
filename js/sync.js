@@ -6,9 +6,18 @@
    
    Estrategia:
    1. Todas las operaciones se hacen primero en local
-   2. Se agregan a una cola de sincronizacion
-   3. Cuando hay conexion, se sincronizan con Supabase
-   4. Los conflictos se resuelven por fecha (ultimo gana)
+   2. Se guardan en IndexedDB con synced: false
+   3. Se agregan a una cola de sincronizacion
+   4. Cuando hay conexion, se sincronizan con Supabase
+   5. Supabase devuelve el registro completo (con timestamps, IDs, etc.)
+   6. Se actualiza el registro local con la respuesta de Supabase
+   7. Se marca como synced: true
+   8. Se elimina de la cola de sincronizacion
+   
+   IMPORTANTE:
+   - IndexedDB no decide, solo almacena
+   - Supabase es la fuente de verdad
+   - Los datos locales se actualizan con la respuesta de Supabase
 ============================================ */
 
 // ============================================
@@ -157,7 +166,15 @@ async function subirCambiosPendientes() {
     
     for (const operacion of pendientes) {
         try {
-            await procesarOperacionSync(operacion);
+            // Procesar operación y obtener resultado de Supabase
+            const resultadoSupabase = await procesarOperacionSync(operacion);
+            
+            // Actualizar registro local con respuesta de Supabase (si existe)
+            if (resultadoSupabase && operacion.operacion !== 'delete') {
+                await actualizarRegistroLocalDespuesDeSync(operacion.tabla, operacion, resultadoSupabase);
+            }
+            
+            // Marcar operación como sincronizada (eliminar de cola)
             await marcarComoSincronizado(operacion.id);
             resultado.procesados++;
             
@@ -210,6 +227,7 @@ function ordenarOperacionesPorDependencias(operaciones) {
 /**
  * Procesa una operacion de sincronizacion individual
  * @param {Object} operacion - Operacion de la cola
+ * @returns {Promise<Object>} Resultado de Supabase (registro insertado/actualizado)
  */
 async function procesarOperacionSync(operacion) {
     const datos = JSON.parse(operacion.datos);
@@ -221,21 +239,21 @@ async function procesarOperacionSync(operacion) {
         switch (operacion.operacion) {
             case 'insert':
                 console.log(`📤 Insertando en ${tabla}:`, datosPreparados);
-                await insertarRegistro(tabla, datosPreparados);
-                console.log(`✅ Insertado exitosamente en ${tabla}`);
-                break;
+                const resultadoInsert = await insertarRegistro(tabla, datosPreparados);
+                console.log(`✅ Insertado exitosamente en ${tabla}`, resultadoInsert);
+                return resultadoInsert; // Devolver resultado de Supabase
                 
             case 'update':
                 console.log(`📤 Actualizando en ${tabla} (id: ${datos.id}):`, datosPreparados);
-                await actualizarRegistro(tabla, datos.id, datosPreparados);
-                console.log(`✅ Actualizado exitosamente en ${tabla}`);
-                break;
+                const resultadoUpdate = await actualizarRegistro(tabla, datos.id, datosPreparados);
+                console.log(`✅ Actualizado exitosamente en ${tabla}`, resultadoUpdate);
+                return resultadoUpdate; // Devolver resultado de Supabase
                 
             case 'delete':
                 console.log(`📤 Eliminando de ${tabla} (id: ${datos.id})`);
                 await eliminarRegistro(tabla, datos.id);
                 console.log(`✅ Eliminado exitosamente de ${tabla}`);
-                break;
+                return null; // Delete no devuelve registro
                 
             default:
                 throw new Error(`Operacion desconocida: ${operacion.operacion}`);
@@ -432,8 +450,45 @@ async function sincronizarTablaLocal(tabla, datosRemotos) {
 }
 
 // ============================================
-// UTILIDADES DE MAPEO
+// UTILIDADES DE MAPEO Y ACTUALIZACIÓN
 // ============================================
+
+/**
+ * Actualiza el registro local después de sincronizar con Supabase
+ * Marca como sincronizado y actualiza con datos de Supabase
+ * @param {string} tablaLocal - Nombre de la tabla local
+ * @param {Object} operacion - Operación de la cola
+ * @param {Object} resultadoSupabase - Resultado de Supabase
+ */
+async function actualizarRegistroLocalDespuesDeSync(tablaLocal, operacion, resultadoSupabase) {
+    const db = getDB();
+    if (!db || !resultadoSupabase) return;
+    
+    try {
+        const datos = JSON.parse(operacion.datos);
+        const idLocal = datos.id; // ID del registro local
+        
+        // Normalizar registro de Supabase si es necesario (ej: ventas)
+        let registroNormalizado = resultadoSupabase;
+        if (tablaLocal === 'ventas') {
+            registroNormalizado = normalizarRegistroVentas(resultadoSupabase);
+        }
+        
+        // Actualizar registro local con datos de Supabase
+        // Mantener sync_id si existe, sino usar el id de Supabase
+        await db.table(tablaLocal).put({
+            ...registroNormalizado,
+            sync_id: registroNormalizado.sync_id || registroNormalizado.id,
+            synced: true // ✅ Marcar como sincronizado
+        });
+        
+        console.log(`🔄 Registro local actualizado después de sync (${tablaLocal}, id: ${idLocal})`);
+        
+    } catch (error) {
+        console.error(`❌ Error actualizando registro local después de sync:`, error);
+        // No lanzar error, solo registrar para no interrumpir el proceso
+    }
+}
 
 /**
  * Mapea nombre de tabla local a nombre en Supabase

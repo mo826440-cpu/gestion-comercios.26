@@ -227,6 +227,48 @@
                 
                 <div class="seccion-contenido">
                     <div class="sync-panel">
+                        <!-- Información sobre el funcionamiento de la sincronización -->
+                        <div class="sync-explicacion">
+                            <h3>📚 ¿Cómo funciona la sincronización?</h3>
+                            <div class="explicacion-contenido">
+                                <p><strong>Estrategia: Offline-First</strong></p>
+                                <ol class="explicacion-lista">
+                                    <li>
+                                        <strong>1️⃣ Creación offline:</strong>
+                                        <br>Cuando se crea un registro sin internet:
+                                        <ul>
+                                            <li>Se guarda en IndexedDB con <code>synced: false</code></li>
+                                            <li>Se genera un UUID local único</li>
+                                            <li>Se agrega a la cola de sincronización</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>2️⃣ Sincronización:</strong>
+                                        <br>Cuando vuelve internet:
+                                        <ul>
+                                            <li>Se envía el registro a Supabase</li>
+                                            <li>Supabase devuelve el registro completo (con timestamps, IDs, etc.)</li>
+                                            <li>Se actualiza el registro local con la respuesta de Supabase</li>
+                                            <li>Se marca como <code>synced: true</code></li>
+                                            <li>Se elimina de la cola de sincronización</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>3️⃣ Índice de sincronización:</strong>
+                                        <ul>
+                                            <li>Cada registro tiene un campo <code>sync_id</code> para rastreo</li>
+                                            <li>El campo <code>synced</code> indica si está sincronizado</li>
+                                            <li>Los registros con <code>synced: false</code> están pendientes</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                                <p class="explicacion-nota">
+                                    💡 <strong>Importante:</strong> IndexedDB no decide, solo almacena. Supabase es la fuente de verdad.
+                                    Los datos locales se actualizan con la respuesta de Supabase para mantener consistencia.
+                                </p>
+                            </div>
+                        </div>
+                        
                         <div class="sync-info">
                             <p>Forzar sincronización completa entre Supabase e IndexedDB.</p>
                             <p class="sync-advertencia">⚠️ Esta operación puede tardar dependiendo de la cantidad de datos.</p>

@@ -651,8 +651,97 @@ body {
 ============================================ */
 .sync-panel {
     text-align: center;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
+}
+
+/* Explicación de sincronización */
+.sync-explicacion {
+    background: rgba(88, 166, 255, 0.05);
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    border-radius: var(--radio-md);
+    padding: var(--espaciado-lg);
+    margin-bottom: var(--espaciado-xl);
+    text-align: left;
+}
+
+.sync-explicacion h3 {
+    margin: 0 0 var(--espaciado-md) 0;
+    font-size: 1rem;
+    color: var(--mant-accent);
+    font-weight: 600;
+}
+
+.explicacion-contenido p {
+    margin: 0 0 var(--espaciado-md) 0;
+    font-size: 0.85rem;
+    color: var(--mant-text-secondary);
+    line-height: 1.6;
+}
+
+.explicacion-contenido p strong {
+    color: var(--mant-text);
+    font-weight: 600;
+}
+
+.explicacion-lista {
+    margin: var(--espaciado-md) 0;
+    padding-left: var(--espaciado-lg);
+    color: var(--mant-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+.explicacion-lista li {
+    margin-bottom: var(--espaciado-md);
+}
+
+.explicacion-lista li strong {
+    color: var(--mant-accent);
+    font-weight: 600;
+}
+
+.explicacion-lista ul {
+    margin: var(--espaciado-sm) 0 0 var(--espaciado-md);
+    padding-left: var(--espaciado-md);
+    list-style: none;
+}
+
+.explicacion-lista ul li {
+    margin-bottom: var(--espaciado-xs);
+    position: relative;
+    padding-left: var(--espaciado-md);
+}
+
+.explicacion-lista ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--mant-text-secondary);
+}
+
+.explicacion-lista code {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--mant-border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--mant-accent);
+}
+
+.explicacion-nota {
+    background: rgba(163, 113, 247, 0.1);
+    border-left: 3px solid var(--mant-purple);
+    padding: var(--espaciado-md);
+    border-radius: var(--radio-sm);
+    margin-top: var(--espaciado-lg) !important;
+    font-size: 0.85rem !important;
+    color: var(--mant-text) !important;
+}
+
+.explicacion-nota strong {
+    color: var(--mant-purple) !important;
 }
 
 .sync-info {
