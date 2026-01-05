@@ -760,9 +760,12 @@ async function marcarComoSincronizado(id) {
 async function incrementarIntentosSincronizacion(id) {
     if (!db) return;
     
-    await db.sync_queue.update(id, {
-        intentos: db.sync_queue.get(id).then(op => (op?.intentos || 0) + 1)
-    });
+    const operacion = await db.sync_queue.get(id);
+    if (operacion) {
+        await db.sync_queue.update(id, {
+            intentos: (operacion.intentos || 0) + 1
+        });
+    }
 }
 
 /**

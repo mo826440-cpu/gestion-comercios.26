@@ -142,12 +142,16 @@ async function subirCambiosPendientes() {
     };
     
     // Obtener cola de pendientes
-    const pendientes = await obtenerPendientesSincronizacion();
+    let pendientes = await obtenerPendientesSincronizacion();
     
     if (pendientes.length === 0) {
         console.log('📤 No hay cambios pendientes para subir');
         return resultado;
     }
+    
+    // Ordenar operaciones según el orden de dependencias definido en SYNC_CONFIG.tablas
+    // Esto asegura que las tablas padre se sincronicen antes que las tablas hijo
+    pendientes = ordenarOperacionesPorDependencias(pendientes);
     
     console.log(`📤 Subiendo ${pendientes.length} cambios pendientes...`);
     
@@ -173,6 +177,34 @@ async function subirCambiosPendientes() {
     }
     
     return resultado;
+}
+
+/**
+ * Ordena las operaciones según el orden de dependencias definido en SYNC_CONFIG.tablas
+ * @param {Array} operaciones - Array de operaciones pendientes
+ * @returns {Array} Operaciones ordenadas
+ */
+function ordenarOperacionesPorDependencias(operaciones) {
+    // Crear un mapa del orden de las tablas
+    const ordenTablas = {};
+    SYNC_CONFIG.tablas.forEach((tabla, index) => {
+        ordenTablas[tabla] = index;
+    });
+    
+    // Ordenar operaciones: primero por orden de tabla, luego por created_at
+    return operaciones.sort((a, b) => {
+        const ordenA = ordenTablas[a.tabla] !== undefined ? ordenTablas[a.tabla] : 999;
+        const ordenB = ordenTablas[b.tabla] !== undefined ? ordenTablas[b.tabla] : 999;
+        
+        if (ordenA !== ordenB) {
+            return ordenA - ordenB;
+        }
+        
+        // Si tienen el mismo orden, ordenar por fecha de creación
+        const fechaA = new Date(a.created_at || 0);
+        const fechaB = new Date(b.created_at || 0);
+        return fechaA - fechaB;
+    });
 }
 
 /**
