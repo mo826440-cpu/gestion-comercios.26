@@ -222,17 +222,29 @@ function aplicarTema(tema) {
     // Remover temas anteriores
     html.removeAttribute('data-theme');
     
+    let temaAplicado = 'light';
+    
     if (tema === 'dark' || tema === 'oscuro') {
         html.setAttribute('data-theme', 'dark');
+        temaAplicado = 'dark';
     } else if (tema === 'light' || tema === 'claro') {
         html.setAttribute('data-theme', 'light');
+        temaAplicado = 'light';
     } else if (tema === 'system' || tema === 'sistema') {
         // Usar preferencia del sistema
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        temaAplicado = prefersDark ? 'dark' : 'light';
+        html.setAttribute('data-theme', temaAplicado);
     }
     
-    console.log(`🎨 Tema aplicado: ${tema}`);
+    // Guardar en localStorage como caché para aplicación rápida en próximas cargas
+    try {
+        localStorage.setItem('adminisgo_tema_cache', temaAplicado);
+    } catch (e) {
+        console.warn('No se pudo guardar tema en localStorage:', e);
+    }
+    
+    console.log(`🎨 Tema aplicado: ${tema} (${temaAplicado})`);
 }
 
 /**

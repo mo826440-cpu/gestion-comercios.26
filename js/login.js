@@ -19,7 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
             await cargarYAplicarTema();
         }
         
-        verificarSesionExistente();
+        // NO verificar sesión existente - siempre mostrar pantalla de login
+        // para que el usuario pueda elegir su cuenta
+        // verificarSesionExistente();
+        
         inicializarFormulario();
     }, 500);
 });
