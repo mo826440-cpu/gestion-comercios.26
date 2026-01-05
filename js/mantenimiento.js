@@ -228,6 +228,12 @@ function configurarBotones() {
         btnSync.addEventListener('click', () => ejecutarSincronizacion());
     }
     
+    // Botón limpiar cola de sincronización
+    const btnLimpiarColaSync = document.getElementById('btnLimpiarColaSync');
+    if (btnLimpiarColaSync) {
+        btnLimpiarColaSync.addEventListener('click', () => limpiarColaSincronizacion());
+    }
+    
     // Botón limpiar duplicados
     const btnLimpiarDuplicados = document.getElementById('btnLimpiarDuplicados');
     if (btnLimpiarDuplicados) {
@@ -1109,6 +1115,43 @@ async function cargarDiferenciasSincronizacion() {
     } catch (error) {
         console.error('Error cargando diferencias:', error);
         container.innerHTML = `<p class="cargando" style="color: var(--mant-error);">Error: ${error.message}</p>`;
+    }
+}
+
+/**
+ * Limpia la cola de sincronización (operaciones pendientes)
+ */
+async function limpiarColaSincronizacion() {
+    const btnLimpiar = document.getElementById('btnLimpiarColaSync');
+    
+    // Confirmar antes de proceder
+    if (!confirm('⚠️ Esto eliminará todas las operaciones pendientes de la cola de sincronización.\n\n¿Estás seguro?')) {
+        return;
+    }
+    
+    if (btnLimpiar) btnLimpiar.disabled = true;
+    mostrarEstadoLimpieza('procesando', '🔄 Limpiando cola de sincronización...');
+    
+    try {
+        const db = getDB();
+        if (!db) throw new Error('IndexedDB no disponible');
+        
+        const count = await db.sync_queue.count();
+        await db.sync_queue.clear();
+        
+        mostrarEstadoLimpieza('exito', `✅ Cola de sincronización limpiada. ${count} operaciones eliminadas.`);
+        
+        // Recargar datos
+        await Promise.all([
+            cargarEstadoMemoria(),
+            cargarDiferenciasSincronizacion()
+        ]);
+        
+    } catch (error) {
+        console.error('Error limpiando cola de sincronización:', error);
+        mostrarEstadoLimpieza('error', `❌ Error: ${error.message}`);
+    } finally {
+        if (btnLimpiar) btnLimpiar.disabled = false;
     }
 }
 

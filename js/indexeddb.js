@@ -778,6 +778,45 @@ async function contarPendientesSincronizacion() {
     return await db.sync_queue.count();
 }
 
+/**
+ * Limpia operaciones fallidas de la cola de sincronización
+ * Elimina operaciones que han alcanzado el máximo de intentos
+ * @param {number} maxIntentos - Máximo de intentos permitidos (opcional, default: 5)
+ * @returns {Promise<number>} Cantidad de operaciones eliminadas
+ */
+async function limpiarOperacionesFallidas(maxIntentos = 5) {
+    if (!db) return 0;
+    
+    const operaciones = await db.sync_queue.toArray();
+    const fallidas = operaciones.filter(op => (op.intentos || 0) >= maxIntentos);
+    
+    if (fallidas.length === 0) {
+        return 0;
+    }
+    
+    for (const op of fallidas) {
+        await db.sync_queue.delete(op.id);
+    }
+    
+    console.log(`🧹 Limpiadas ${fallidas.length} operaciones fallidas de la cola de sincronización`);
+    return fallidas.length;
+}
+
+/**
+ * Limpia toda la cola de sincronización
+ * ⚠️ ADVERTENCIA: Esto elimina TODAS las operaciones pendientes
+ * @returns {Promise<number>} Cantidad de operaciones eliminadas
+ */
+async function limpiarColaSincronizacion() {
+    if (!db) return 0;
+    
+    const count = await db.sync_queue.count();
+    await db.sync_queue.clear();
+    
+    console.log(`🧹 Cola de sincronización limpiada: ${count} operaciones eliminadas`);
+    return count;
+}
+
 // ============================================
 // SESION LOCAL
 // ============================================
