@@ -32,8 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
         inicializarSincronizacion();
         await verificarAccesosEspeciales();
         
-        // Intentar cargar tema nuevamente después de sincronización (por si acaso)
+        // Recargar datos del usuario después de sincronización para asegurar que el comercio esté actualizado
         setTimeout(async () => {
+            await inicializarDatosUsuario();
+            
             if (typeof cargarYAplicarTema === 'function') {
                 await cargarYAplicarTema();
             }

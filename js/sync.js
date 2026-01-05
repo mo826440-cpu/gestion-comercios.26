@@ -183,21 +183,34 @@ async function procesarOperacionSync(operacion) {
     const datos = JSON.parse(operacion.datos);
     const tabla = mapearTablaLocal(operacion.tabla);
     
-    switch (operacion.operacion) {
-        case 'insert':
-            await insertarRegistro(tabla, prepararParaSupabase(datos));
-            break;
-            
-        case 'update':
-            await actualizarRegistro(tabla, datos.id, prepararParaSupabase(datos));
-            break;
-            
-        case 'delete':
-            await eliminarRegistro(tabla, datos.id);
-            break;
-            
-        default:
-            throw new Error(`Operacion desconocida: ${operacion.operacion}`);
+    try {
+        const datosPreparados = prepararParaSupabase(datos, operacion.tabla);
+        
+        switch (operacion.operacion) {
+            case 'insert':
+                console.log(`📤 Insertando en ${tabla}:`, datosPreparados);
+                await insertarRegistro(tabla, datosPreparados);
+                console.log(`✅ Insertado exitosamente en ${tabla}`);
+                break;
+                
+            case 'update':
+                console.log(`📤 Actualizando en ${tabla} (id: ${datos.id}):`, datosPreparados);
+                await actualizarRegistro(tabla, datos.id, datosPreparados);
+                console.log(`✅ Actualizado exitosamente en ${tabla}`);
+                break;
+                
+            case 'delete':
+                console.log(`📤 Eliminando de ${tabla} (id: ${datos.id})`);
+                await eliminarRegistro(tabla, datos.id);
+                console.log(`✅ Eliminado exitosamente de ${tabla}`);
+                break;
+                
+            default:
+                throw new Error(`Operacion desconocida: ${operacion.operacion}`);
+        }
+    } catch (error) {
+        console.error(`❌ Error procesando operación ${operacion.operacion} en ${tabla}:`, error);
+        throw error;
     }
 }
 
@@ -409,10 +422,24 @@ function mapearTablaLocal(tablaLocal) {
  * Prepara un objeto para enviar a Supabase
  * Remueve campos locales que no existen en Supabase
  * @param {Object} datos - Datos locales
+ * @param {string} tabla - Nombre de la tabla (para validaciones específicas)
  * @returns {Object} Datos limpios
  */
-function prepararParaSupabase(datos) {
+function prepararParaSupabase(datos, tabla = '') {
+    // Remover campos locales que no existen en Supabase
     const { synced, ...datosLimpios } = datos;
+    
+    // Para productos, asegurar que todos los campos requeridos estén presentes
+    if (tabla === 'productos' || datosLimpios.comercio_id) {
+        // Asegurar que los campos numéricos sean números válidos
+        if (datosLimpios.precio_costo !== undefined) {
+            datosLimpios.precio_costo = datosLimpios.precio_costo || 0;
+        }
+        if (datosLimpios.precio_venta !== undefined) {
+            datosLimpios.precio_venta = datosLimpios.precio_venta || 0;
+        }
+    }
+    
     return datosLimpios;
 }
 
