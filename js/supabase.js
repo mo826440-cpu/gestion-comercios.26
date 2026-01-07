@@ -11,8 +11,8 @@
 // ============================================
 // CONFIGURACION DE SUPABASE
 // ============================================
-const SUPABASE_URL = 'https://jnplnwpofxzfqchkvgpv.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpucGxud3BvZnh6ZnFjaGt2Z3B2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNTQ0NzUsImV4cCI6MjA4MDczMDQ3NX0.0SzhCWbJip45WGJ0zqu62KR7BY6-Ahia-g_LbsZz8BU';
+const SUPABASE_URL = 'https://arspyvtixxwjrdlkuiic.supabase.co' ;
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyc3B5dnRpeHh3anJkbGt1aWljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MjQwMDMsImV4cCI6MjA4MzQwMDAwM30.povptcvQ8M2TEQ5dcSw_K6OE9S5DiIwUT-Nn8yhE2oE';
 
 // Variable global para el cliente de Supabase
 let supabaseClient = null;
